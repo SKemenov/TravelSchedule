@@ -52,6 +52,7 @@
 		E96F72302BD9D60100EE294E /* CheckboxToggleStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = E96F722F2BD9D60100EE294E /* CheckboxToggleStyle.swift */; };
 		E973DC892C0E1B6A003D5D31 /* CarrierContactView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E973DC882C0E1B6A003D5D31 /* CarrierContactView.swift */; };
 		E979C04C2C0E34A400A7B75E /* FilterTimeSectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E979C04B2C0E34A400A7B75E /* FilterTimeSectionView.swift */; };
+		E9809B5D2C2E8A92007980BD /* SettingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9809B5C2C2E8A92007980BD /* SettingsViewModel.swift */; };
 		E98608302C0E24BC00B75782 /* MarkerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E986082F2C0E24BC00B75782 /* MarkerView.swift */; };
 		E98703732C0E3690006495B8 /* FilterConnectionSectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E98703722C0E3690006495B8 /* FilterConnectionSectionView.swift */; };
 		E98962DC2BA0EAD5005A84BA /* AuthenticationClientMiddleware.swift in Sources */ = {isa = PBXBuildFile; fileRef = E98962DB2BA0EAD5005A84BA /* AuthenticationClientMiddleware.swift */; };
@@ -141,6 +142,7 @@
 		E96F722F2BD9D60100EE294E /* CheckboxToggleStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckboxToggleStyle.swift; sourceTree = "<group>"; };
 		E973DC882C0E1B6A003D5D31 /* CarrierContactView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CarrierContactView.swift; sourceTree = "<group>"; };
 		E979C04B2C0E34A400A7B75E /* FilterTimeSectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterTimeSectionView.swift; sourceTree = "<group>"; };
+		E9809B5C2C2E8A92007980BD /* SettingsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewModel.swift; sourceTree = "<group>"; };
 		E986082F2C0E24BC00B75782 /* MarkerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarkerView.swift; sourceTree = "<group>"; };
 		E98703722C0E3690006495B8 /* FilterConnectionSectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterConnectionSectionView.swift; sourceTree = "<group>"; };
 		E98962DB2BA0EAD5005A84BA /* AuthenticationClientMiddleware.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationClientMiddleware.swift; sourceTree = "<group>"; };
@@ -228,6 +230,7 @@
 				E9F490852B9DB495006FD055 /* openapi.yaml */,
 				E9F490872B9DB4F6006FD055 /* openapi-generator-config.yaml */,
 				E93E20F72B9D7DF100B43DA5 /* Travel_ScheduleApp.swift */,
+				E9809B5A2C2E8A83007980BD /* ViewModel */,
 				E9A49C2C2BD2A04E00017734 /* Models */,
 				E9A49C222BD29D2700017734 /* Views */,
 				E936A6202BD62E9600CB08F7 /* Extensions */,
@@ -351,6 +354,14 @@
 				E99D97442C0E384B0096E31D /* SetCustomButton.swift */,
 			);
 			path = ViewModifier;
+			sourceTree = "<group>";
+		};
+		E9809B5A2C2E8A83007980BD /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				E9809B5C2C2E8A92007980BD /* SettingsViewModel.swift */,
+			);
+			path = ViewModel;
 			sourceTree = "<group>";
 		};
 		E9A49C222BD29D2700017734 /* Views */ = {
@@ -627,6 +638,7 @@
 				E9EC1BF82C0CB5D400FC85ED /* AppColors.swift in Sources */,
 				E9A49C272BD29EA000017734 /* MainSearchView.swift in Sources */,
 				E909C8442BA1098C00D67B65 /* SchedulesService.swift in Sources */,
+				E9809B5D2C2E8A92007980BD /* SettingsViewModel.swift in Sources */,
 				E909C84D2BA1795F00D67B65 /* NearestSettlementService.swift in Sources */,
 				E91BC4C22BD85410003FF64D /* Filter.swift in Sources */,
 				E9E3515D2C0EE7D60052F0B2 /* StoryPageView.swift in Sources */,
