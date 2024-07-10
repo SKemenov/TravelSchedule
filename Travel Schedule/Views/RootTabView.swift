@@ -9,14 +9,22 @@ import SwiftUI
 
 struct RootTabView: View {
     @Binding var schedule: Schedule
+//    @State var schedule = Schedule.sampleData
     @State var navPath: [ViewsRouter] = []
     @State var direction: Int = .departure
     @State var stories: [Story] = Story.mockData
+    @StateObject var viewModel = TravelViewModel(networkService: NetworkService())
 
     var body: some View {
         NavigationStack(path: $navPath) {
             TabView {
-                SearchTabView(stories: $stories, schedule: $schedule, navPath: $navPath, direction: $direction)
+                SearchTabView(
+                    stories: $stories,
+                    schedule: $schedule,
+                    navPath: $navPath,
+                    direction: $direction,
+                    viewModel: viewModel
+                )
                     .tabItem {
                         AppImages.Tabs.schedule
                     }

@@ -12,11 +12,12 @@ struct SearchTabView: View {
     @Binding var schedule: Schedule
     @Binding var navPath: [ViewsRouter]
     @Binding var direction: Int
+    @ObservedObject var viewModel: TravelViewModel
 
     var body: some View {
         VStack(spacing: .zero) {
             PreviewStoriesView(stories: $stories)
-            MainSearchView(schedule: $schedule, navPath: $navPath, directionId: $direction)
+            MainSearchView(schedule: $schedule, navPath: $navPath, directionId: $direction, viewModel: viewModel)
             Spacer()
         }
     }
@@ -28,7 +29,8 @@ struct SearchTabView: View {
             stories: .constant(Story.mockData),
             schedule: .constant(Schedule.sampleData),
             navPath: .constant([]),
-            direction: .constant(0)
+            direction: .constant(0),
+            viewModel: TravelViewModel(networkService: NetworkService())
         )
     }
 }

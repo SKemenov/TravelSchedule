@@ -11,41 +11,62 @@ struct DestinationsListView: View {
     let destinations: [Destination]
     private let dummyDirection = ["Откуда", "Куда"]
     @Binding var directionId: Int
+    @ObservedObject var viewModel: TravelViewModel
 
     var body: some View {
-        VStack(alignment: .leading, spacing: .zero) {
-            ForEach(Array(destinations.enumerated()), id: \.offset) { index, destination in
-                let city = destination.cityTitle
-                let station = destination.stationTitle.isEmpty
-                ? ""
-                : " (" + destination.stationTitle + ")"
-                let destinationLabel = city.isEmpty
-                ? dummyDirection[index]
-                : city + station
-                return NavigationLink(value: ViewsRouter.cityView) {
-                    HStack {
-                        Text(destinationLabel)
-                            .foregroundStyle(city.isEmpty ? AppColors.Universal.gray : AppColors.Universal.black)
-                        Spacer()
+        ZStack {
+            VStack(alignment: .leading, spacing: .zero) {
+                ForEach(Array(destinations.enumerated()), id: \.offset) { index, destination in
+                    let city = destination.city.title
+                    let station = destination.station.title.isEmpty
+                        ? ""
+                    : " (" + destination.station.title + ")"
+                    let destinationLabel = city.isEmpty
+                        ? dummyDirection[index]
+                        : city + station
+                    return NavigationLink(value: ViewsRouter.cityView) {
+                        HStack {
+                            Text(destinationLabel)
+                                .foregroundStyle(
+                                    viewModel.state == .loading
+                                        ? .clear
+                                        : city.isEmpty
+                                            ? AppColors.Universal.gray
+                                            : AppColors.Universal.black
+                                )
+                            Spacer()
+                        }
+                        .padding(AppSizes.Spacing.large)
+                        .frame(maxWidth: .infinity, maxHeight: AppSizes.Height.searchingRow)
                     }
-                    .padding(AppSizes.Spacing.large)
-                    .frame(maxWidth: .infinity, maxHeight: AppSizes.Height.searchingRow)
+                    .simultaneousGesture(TapGesture().onEnded {
+                        directionId = index
+                    })
                 }
-                .simultaneousGesture(TapGesture().onEnded {
-                    directionId = index
-                })
+            }
+            .background(AppColors.Universal.white)
+            .clipShape(RoundedRectangle(cornerRadius: AppSizes.CornerRadius.xLarge))
+            if viewModel.state == .loading {
+                ProgressView()
+                    .progressViewStyle(CircularProgressViewStyle(tint: .ypBlackDuo))
             }
         }
-        .background(AppColors.Universal.white)
-        .clipShape(RoundedRectangle(cornerRadius: AppSizes.CornerRadius.xLarge))
     }
 }
 
 
 #Preview {
     VStack {
-        DestinationsListView(destinations: Destination.emptyDestination, directionId: .constant(0))
-        DestinationsListView(destinations: Destination.sampleData, directionId: .constant(0))
+        DestinationsListView(
+            destinations: Destination.emptyDestination,
+            directionId: .constant(0),
+            viewModel: TravelViewModel(networkService: NetworkService())
+        )
+        DestinationsListView(
+            destinations: Destination.sampleData,
+            directionId: .constant(0),
+            viewModel: TravelViewModel(networkService: NetworkService())
+        )
     }
     .padding()
     .background(AppColors.Universal.blue)
