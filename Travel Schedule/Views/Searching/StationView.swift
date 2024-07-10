@@ -14,13 +14,14 @@ struct StationView: View {
     @Binding var schedule: Schedule
     @Binding var navPath: [ViewsRouter]
     @Binding var direction: Int
+    @ObservedObject var viewModel: TravelViewModel
 
     @State private var searchString = String()
 
     private var searchingResults: [Station] {
         searchString.isEmpty
-            ? schedule.stations
-            : schedule.stations.filter { $0.title.lowercased().contains(searchString.lowercased()) }
+            ? viewModel.stations
+            : viewModel.stations.filter { $0.title.lowercased().contains(searchString.lowercased()) }
     }
 
     var body: some View {
@@ -29,19 +30,24 @@ struct StationView: View {
             if searchingResults.isEmpty {
                 SearchResultEmptyView(notification: notification)
             } else {
-                ScrollView(.vertical) {
-                    ForEach(searchingResults) { station in
-                        Button {
-                            schedule.destinations[direction].stationTitle = station.title
-                            navPath.removeAll()
-                        } label: {
-                            RowSearchView(rowString: station.title)
+                ZStack {
+                    ScrollView(.vertical) {
+                        ForEach(searchingResults) { station in
+                            Button {
+                                saveSelected(station: station)
+                            } label: {
+                                RowSearchView(rowString: station.title)
+                            }
+                            .setRowElement()
+                            .padding(.vertical, AppSizes.Spacing.large)
                         }
-                        .setRowElement()
-                        .padding(.vertical, AppSizes.Spacing.large)
+                    }
+                    .padding(.vertical, AppSizes.Spacing.large)
+                    if viewModel.state == .loading {
+                        ProgressView()
+                            .progressViewStyle(CircularProgressViewStyle(tint: .ypBlackDuo))
                     }
                 }
-                .padding(.vertical, AppSizes.Spacing.large)
             }
             Spacer()
         }
@@ -49,6 +55,19 @@ struct StationView: View {
         .foregroundStyle(AppColors.LightDark.black)
         .onAppear {
             searchString = String()
+            viewModel.fetchStations(for: schedule.destinations[direction].city)
+        }
+    }
+}
+
+private extension StationView {
+    func saveSelected(station: Station) {
+        Task {
+            print(#fileID, #function, station)
+            let updatedStation = try await viewModel.fetchStationInfo(for: station)
+            print(#fileID, #function, updatedStation)
+            schedule.destinations[direction].station = updatedStation
+            navPath.removeAll()
         }
     }
 }
@@ -58,7 +77,8 @@ struct StationView: View {
         StationView(
             schedule: .constant(Schedule.sampleData),
             navPath: .constant([]),
-            direction: .constant(.departure)
+            direction: .constant(.departure),
+            viewModel: TravelViewModel(networkService: NetworkService())
         )
     }
 }

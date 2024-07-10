@@ -74,6 +74,70 @@ final class TravelViewModel: ObservableObject {
             state = .loaded
         }
     }
+
+    func fetchStations(for city: City) {
+        Task {
+            state = .loading
+            var newList: [Station] = []
+            guard
+                let store,
+                let countries = store.countries else { return }
+            countries.forEach {
+                $0.regions?.forEach {
+                    $0.settlements?.forEach {
+                        if $0.codes?.yandex_code == city.yandexCode {
+                            $0.stations?.forEach { station in
+                                guard let station = convert(from: station) else { return }
+                                newList.append(station)
+                            }
+                        }
+                    }
+                }
+            }
+            stations = newList.sorted { $0.title < $1.title }
+            state = .loaded
+        }
+    }
+}
+
+private extension TravelViewModel {
+    func convert(from station: Components.Schemas.SettlementsStations) -> Station? {
+        guard
+            let type = station.station_type,
+            type == "airport" || type == "train_station" || type == "river_port",
+            let titleRawValue = station.title,
+            let longitudeRawValue = station.longitude,
+            let latitudeRawValue = station.latitude else { return nil }
+        let latitude = extract(latitude: latitudeRawValue)
+        let longitude = extract(longitude: longitudeRawValue)
+        let title = type == "airport" ? ["аэропорт", titleRawValue].joined(separator: " ") : titleRawValue
+        if latitude == 0 && longitude == 0 { return nil }
+        return Station(
+            title: title,
+            type: type,
+            code: "",
+            latitude: latitude,
+            longitude: longitude
+        )
+    }
+
+    func extract(longitude: Components.Schemas.SettlementsStations.longitudePayload) -> Double {
+        var coordinate: Double = 0
+        switch longitude {
+            case .case1(let doubleValue): coordinate = doubleValue
+            case .case2: break
+        }
+        return coordinate
+    }
+
+    func extract(latitude: Components.Schemas.SettlementsStations.latitudePayload) -> Double {
+        var coordinate: Double = 0
+        switch latitude {
+            case .case1(let doubleValue): coordinate = doubleValue
+            case .case2: break
+        }
+        return coordinate
+    }
 }
 extension TravelViewModel {
     enum State: Equatable {

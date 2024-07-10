@@ -46,7 +46,12 @@ struct RootTabView: View {
                         )
                             .toolbar(.hidden, for: .tabBar)
                     case .stationView:
-                        StationView(schedule: $schedule, navPath: $navPath, direction: $direction)
+                        StationView(
+                            schedule: $schedule,
+                            navPath: $navPath,
+                            direction: $direction,
+                            viewModel: viewModel
+                        )
                             .toolbar(.hidden, for: .tabBar)
                     case .routeView:
                         RoutesListView(schedule: $schedule)
