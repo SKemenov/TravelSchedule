@@ -12,7 +12,7 @@ import OpenAPIURLSession
 typealias NearestStations = Components.Schemas.Stations
 
 protocol NearestStationsServiceProtocol {
-    func getNearestStations(lat: Double, lng: Double, distance: Int) async throws -> NearestStations
+    func getNearestStations(lat: Double, lng: Double, distance: Double) async throws -> NearestStations
 }
 
 final class NearestStationsService: NearestStationsServiceProtocol {
@@ -22,7 +22,7 @@ final class NearestStationsService: NearestStationsServiceProtocol {
         self.client = client
     }
 
-    func getNearestStations(lat: Double, lng: Double, distance: Int) async throws -> NearestStations {
+    func getNearestStations(lat: Double, lng: Double, distance: Double) async throws -> NearestStations {
         let response = try await client.getNearestStations(
             query: .init(
                 lat: lat,

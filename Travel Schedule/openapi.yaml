@@ -334,7 +334,7 @@ components:
       in: query
       description: радиус охвата
       schema:
-        type: integer
+        type: number
 
     dateParam:
       name: date

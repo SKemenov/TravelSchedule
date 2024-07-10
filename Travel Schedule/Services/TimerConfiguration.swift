@@ -1,5 +1,5 @@
 //
-//  TimerConficugation.swift
+//  TimerConfiguration.swift
 //  Travel Schedule
 //
 //  Created by Sergey Kemenov on 04.06.2024.

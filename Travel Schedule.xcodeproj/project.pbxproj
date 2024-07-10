@@ -37,7 +37,7 @@
 		E93E20F82B9D7DF100B43DA5 /* Travel_ScheduleApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = E93E20F72B9D7DF100B43DA5 /* Travel_ScheduleApp.swift */; };
 		E93E20FC2B9D7DF200B43DA5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E93E20FB2B9D7DF200B43DA5 /* Assets.xcassets */; };
 		E93E20FF2B9D7DF200B43DA5 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E93E20FE2B9D7DF200B43DA5 /* Preview Assets.xcassets */; };
-		E94ABCB92C0EE3350091B28B /* TimerConficugation.swift in Sources */ = {isa = PBXBuildFile; fileRef = E94ABCB82C0EE3350091B28B /* TimerConficugation.swift */; };
+		E94ABCB92C0EE3350091B28B /* TimerConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = E94ABCB82C0EE3350091B28B /* TimerConfiguration.swift */; };
 		E94ABCBB2C0EE3560091B28B /* ProgressBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E94ABCBA2C0EE3560091B28B /* ProgressBarView.swift */; };
 		E94ABCBE2C0EE4580091B28B /* CloseButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E94ABCBD2C0EE4580091B28B /* CloseButtonView.swift */; };
 		E96F720A2BD9930800EE294E /* Bundle+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E96F72092BD9930800EE294E /* Bundle+Extensions.swift */; };
@@ -127,7 +127,7 @@
 		E93E20F72B9D7DF100B43DA5 /* Travel_ScheduleApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Travel_ScheduleApp.swift; sourceTree = "<group>"; };
 		E93E20FB2B9D7DF200B43DA5 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		E93E20FE2B9D7DF200B43DA5 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
-		E94ABCB82C0EE3350091B28B /* TimerConficugation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerConficugation.swift; sourceTree = "<group>"; };
+		E94ABCB82C0EE3350091B28B /* TimerConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerConfiguration.swift; sourceTree = "<group>"; };
 		E94ABCBA2C0EE3560091B28B /* ProgressBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressBarView.swift; sourceTree = "<group>"; };
 		E94ABCBD2C0EE4580091B28B /* CloseButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloseButtonView.swift; sourceTree = "<group>"; };
 		E96F72092BD9930800EE294E /* Bundle+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Bundle+Extensions.swift"; sourceTree = "<group>"; };
@@ -467,7 +467,7 @@
 				E909C84F2BA1826400D67B65 /* CarriersService.swift */,
 				E909C8522BA18EAB00D67B65 /* StationsListService.swift */,
 				E9163A8D2BD29A2C0007D9CF /* NetworkService.swift */,
-				E94ABCB82C0EE3350091B28B /* TimerConficugation.swift */,
+				E94ABCB82C0EE3350091B28B /* TimerConfiguration.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -645,7 +645,7 @@
 				E909C8532BA18EAB00D67B65 /* StationsListService.swift in Sources */,
 				E9163A8E2BD29A2C0007D9CF /* NetworkService.swift in Sources */,
 				E96F720D2BD9939100EE294E /* Int+Extensions.swift in Sources */,
-				E94ABCB92C0EE3350091B28B /* TimerConficugation.swift in Sources */,
+				E94ABCB92C0EE3350091B28B /* TimerConfiguration.swift in Sources */,
 				E911F5592C0E2A5C003409F2 /* CheckboxView.swift in Sources */,
 				E9A49C332BD2A21C00017734 /* Schedule.swift in Sources */,
 				E936A61A2BD5C16F00CB08F7 /* AgreementView.swift in Sources */,
