@@ -15,11 +15,11 @@ struct RoutesListView: View {
     @State var currentFilter = Filter()
 
     private var departure: String {
-        schedule.destinations[.departure].cityTitle + " (" + schedule.destinations[.departure].stationTitle + ") "
+        schedule.destinations[.departure].city.title + " (" + schedule.destinations[.departure].station.title + ") "
     }
 
     private var arrival: String {
-        schedule.destinations[.arrival].cityTitle + " (" + schedule.destinations[.arrival].stationTitle + ") "
+        schedule.destinations[.arrival].city.title + " (" + schedule.destinations[.arrival].station.title + ") "
     }
 
     private var filteredRoutes: [Route] {

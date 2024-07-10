@@ -13,10 +13,10 @@ struct SearchButtonView: View {
     let route: ViewsRouter
 
     private var isDepartureReady: Bool {
-        !destinations[.departure].cityTitle.isEmpty && !destinations[.departure].stationTitle.isEmpty
+        !destinations[.departure].city.title.isEmpty && !destinations[.departure].station.title.isEmpty
     }
     private var isArrivalReady: Bool {
-        !destinations[.arrival].cityTitle.isEmpty && !destinations[.arrival].stationTitle.isEmpty
+        !destinations[.arrival].city.title.isEmpty && !destinations[.arrival].station.title.isEmpty
     }
 
     var body: some View {

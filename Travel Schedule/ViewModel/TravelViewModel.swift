@@ -98,6 +98,37 @@ final class TravelViewModel: ObservableObject {
             state = .loaded
         }
     }
+
+    func fetchStationInfo(for station: Station) async throws -> Station {
+        state = .loading
+        print(#fileID, #function, state)
+        let service = NearestStationsService(client: networkService.client)
+        let response = try await service.getNearestStations(
+            lat: station.latitude,
+            lng: station.longitude,
+            distance: 0.1
+        )
+        guard let stations = response.stations else { throw ErrorType.serverError }
+
+        print(#fileID, #function, "taken stations", stations.count)
+        let filteredStations = stations.filter { $0.station_type == station.type }
+        print(#fileID, #function, "filtered to", filteredStations.count, filteredStations)
+        if filteredStations.isEmpty { throw ErrorType.serverError }
+        guard
+            let station = filteredStations.first,
+            let type = station.station_type,
+            let titleRawValue = station.title,
+            let title = station.popular_title != nil
+                ? station.popular_title
+                : type == "airport" ? ["аэропорт", titleRawValue].joined(separator: " ") : titleRawValue,
+            let code = station.code,
+            let latitude = station.lat,
+            let longitude = station.lng else { throw ErrorType.serverError }
+        let newStation = Station(title: title, type: type, code: code, latitude: latitude, longitude: longitude)
+        state = .loaded
+        print(#fileID, #function, state, newStation)
+        return newStation
+    }
 }
 
 private extension TravelViewModel {
