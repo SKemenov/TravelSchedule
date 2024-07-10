@@ -14,13 +14,14 @@ struct CityView: View {
     @Binding var schedule: Schedule
     @Binding var navPath: [ViewsRouter]
     @Binding var direction: Int
+    @ObservedObject var viewModel: TravelViewModel
 
     @State private var searchString = String()
 
     private var searchingResults: [City] {
         searchString.isEmpty
-            ? schedule.cities
-            : schedule.cities.filter { $0.title.lowercased().contains(searchString.lowercased()) }
+            ? viewModel.cities
+            : viewModel.cities.filter { $0.title.lowercased().contains(searchString.lowercased()) }
     }
 
     var body: some View {
@@ -29,16 +30,19 @@ struct CityView: View {
             if searchingResults.isEmpty {
                 SearchResultEmptyView(notification: notification)
             } else {
-                ScrollView(.vertical) {
-                    ForEach(searchingResults) { city in
-                        NavigationLink(value: ViewsRouter.stationView) {
-                            RowSearchView(rowString: city.title)
+                ScrollView(.vertical, showsIndicators: false) {
+                    LazyVStack(spacing: .zero) {
+                        ForEach(searchingResults) { city in
+                            NavigationLink(value: ViewsRouter.stationView) {
+                                RowSearchView(rowString: city.title)
+                            }
+                            .simultaneousGesture(TapGesture().onEnded {
+                                schedule.destinations[direction].city = city
+                                print(city.yandexCode)
+                            })
+                            .setRowElement()
+                            .padding(.vertical, AppSizes.Spacing.large)
                         }
-                        .simultaneousGesture(TapGesture().onEnded {
-                            schedule.destinations[direction].cityTitle = city.title
-                        })
-                        .setRowElement()
-                        .padding(.vertical, AppSizes.Spacing.large)
                     }
                 }
                 .padding(.vertical, AppSizes.Spacing.large)
@@ -49,12 +53,18 @@ struct CityView: View {
         .foregroundStyle(AppColors.LightDark.black)
         .onAppear {
             searchString = String()
+            viewModel.fetchCities()
         }
     }
 }
 
 #Preview {
     NavigationStack {
-        CityView(schedule: .constant(Schedule.sampleData), navPath: .constant([]), direction: .constant(0))
+        CityView(
+            schedule: .constant(Schedule.sampleData),
+            navPath: .constant([]),
+            direction: .constant(0),
+            viewModel: TravelViewModel(networkService: NetworkService())
+        )
     }
 }

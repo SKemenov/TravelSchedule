@@ -10,7 +10,7 @@ import Foundation
 // MARK: - Struct
 struct Schedule: Hashable, Identifiable {
     let id = UUID()
-    let cities: [City]
+    var cities: [City]
     let stations: [Station]
     var destinations: [Destination]
     let routes: [Route]

@@ -38,7 +38,12 @@ struct RootTabView: View {
             .navigationDestination(for: ViewsRouter.self) { pathValue in
                 switch pathValue {
                     case .cityView:
-                        CityView(schedule: $schedule, navPath: $navPath, direction: $direction)
+                        CityView(
+                            schedule: $schedule,
+                            navPath: $navPath,
+                            direction: $direction,
+                            viewModel: viewModel
+                        )
                             .toolbar(.hidden, for: .tabBar)
                     case .stationView:
                         StationView(schedule: $schedule, navPath: $navPath, direction: $direction)
