@@ -10,7 +10,7 @@ import SwiftUI
 @main
 struct Travel_ScheduleApp: App {
     @State private var schedule = Schedule.sampleData
-    @StateObject var settings = SettingsViewModel()
+    @StateObject var settings = SettingsViewModel(networkService: NetworkService())
 
     var body: some Scene {
         WindowGroup {

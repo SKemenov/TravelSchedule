@@ -64,5 +64,5 @@ struct RootTabView: View {
 
 #Preview {
     RootTabView(schedule: .constant(Schedule.sampleData))
-        .environmentObject(SettingsViewModel())
+        .environmentObject(SettingsViewModel(networkService: NetworkService()))
 }

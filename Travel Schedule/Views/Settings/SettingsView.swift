@@ -11,7 +11,6 @@ struct SettingsView: View {
     private enum Titles {
         static let darkMode = "Тёмная тема"
         static let agreement = "Пользовательское соглашение"
-        static let description = "Приложение использует API «Яндекс.Расписания»"
         static let version = "Версия \(Bundle.main.appVersionLong).\(Bundle.main.appBuild)"
     }
     @EnvironmentObject var settings: SettingsViewModel
@@ -31,7 +30,7 @@ struct SettingsView: View {
             Spacer()
 
             VStack(alignment: .center, spacing: AppSizes.Spacing.large) {
-                Text(Titles.description)
+                Text(settings.copyrightInfo)
                 Text(Titles.version)
             }
             .font(AppFonts.Regular.small)
@@ -45,6 +44,6 @@ struct SettingsView: View {
 #Preview {
     NavigationStack {
         SettingsView()
-            .environmentObject(SettingsViewModel())
+            .environmentObject(SettingsViewModel(networkService: NetworkService()))
     }
 }

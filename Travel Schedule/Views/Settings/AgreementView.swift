@@ -16,17 +16,10 @@ struct AgreementView: View {
     @State private var isPresentWebView = false
 
     var body: some View {
-        VStack {
-            switch Bool.random() {
-                case true:
-                    if let url = URL(string: urlString) {
-                        WebView(url: url)
-                            .ignoresSafeArea(.all, edges: .bottom)
-                            .setCustomNavigationBar(title: title)
-                    }
-                case false:
-                    ErrorView(errorType: Bool.random() ? .connectionError : .serverError)
-            }
+        if let url = URL(string: urlString) {
+            WebView(url: url)
+                .ignoresSafeArea(.all, edges: .bottom)
+                .setCustomNavigationBar(title: title)
         }
     }
 }

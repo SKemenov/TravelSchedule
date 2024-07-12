@@ -9,7 +9,6 @@ import Foundation
 
 @MainActor
 final class TravelViewModel: ObservableObject {
-    @Published var copyrightInfo = String()
     @Published private (set) var cities: [City] = []
     @Published private (set) var stations: [Station] = []
     @Published private (set) var state: State = .loading
@@ -18,21 +17,9 @@ final class TravelViewModel: ObservableObject {
 
     init(networkService: NetworkService) {
         self.networkService = networkService
-        self.getCopyright()
         self.fetchData()
     }
 
-    func getCopyright() {
-        Task {
-            let service = CopyrightService(client: networkService.client)
-            do {
-                let response = try await service.getCopyright()
-                copyrightInfo = response.copyright?.text ?? "dummy string"
-            } catch {
-                print(error.localizedDescription)
-                throw ErrorType.connectionError
-            }
-        }
     }
 
     func fetchData() {
