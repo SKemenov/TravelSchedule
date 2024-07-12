@@ -18,6 +18,8 @@ final class TravelViewModel: ObservableObject {
 
     @Published private (set) var destinations: [Destination]
     @Published private (set) var direction: Int = .departure
+    @Published private (set) var currentError: ErrorType = .serverError
+
     var isSearchButtonReady: Bool {
         !destinations[.departure].city.title.isEmpty &&
         !destinations[.departure].station.title.isEmpty &&
@@ -27,6 +29,7 @@ final class TravelViewModel: ObservableObject {
 
     private let networkService: NetworkService
     private var store: [Components.Schemas.Settlements] = []
+    private var stationDownloader: StationDownloader
 
     init(
         networkService: NetworkService,
@@ -38,6 +41,7 @@ final class TravelViewModel: ObservableObject {
         self.cities = cities
         self.stations = stations
         self.destinations = destinations
+        self.stationDownloader = StationDownloader(networkService: networkService)
     }
 
     func fetchData() {
@@ -118,33 +122,41 @@ final class TravelViewModel: ObservableObject {
 
     func saveSelected(station: Station) async throws {
         state = .loading
-        print(#fileID, #function, state)
-        let service = NearestStationsService(client: networkService.client)
-        let response = try await service.getNearestStations(
-            lat: station.latitude,
-            lng: station.longitude,
-            distance: 0.1
-        )
-        guard let stations = response.stations else { throw ErrorType.serverError }
+//        let service = NearestStationsService(client: networkService.client)
+//        let response = try await service.getNearestStations(
+//            lat: station.latitude,
+//            lng: station.longitude,
+//            distance: 0.1
+//        )
+//        guard
+//            let stations = response.stations,
+//            !stations.isEmpty,
+//            let station = stations.first(where: { $0.station_type == station.type }),
+//            let type = station.station_type,
+//            let titleRawValue = station.title,
+//            let popularTitleRawValue = station.popular_title,
+//            let code = station.code,
+//            let latitude = station.lat,
+//            let longitude = station.lng else { throw ErrorType.serverError }
+//        let title = !popularTitleRawValue.isEmpty
+//            ? popularTitleRawValue
+//            : type == "airport"
+//                ? ["аэропорт", titleRawValue].joined(separator: " ")
+//                : titleRawValue
+//        let newStation = Station(title: title, type: type, code: code, latitude: latitude, longitude: longitude)
 
-        print(#fileID, #function, "taken stations", stations.count)
-        let filteredStations = stations.filter { $0.station_type == station.type }
-        print(#fileID, #function, "filtered to", filteredStations.count, filteredStations)
-        if filteredStations.isEmpty { throw ErrorType.serverError }
-        guard
-            let station = filteredStations.first,
-            let type = station.station_type,
-            let titleRawValue = station.title,
-            let title = station.popular_title != nil
-                ? station.popular_title
-                : type == "airport" ? ["аэропорт", titleRawValue].joined(separator: " ") : titleRawValue,
-            let code = station.code,
-            let latitude = station.lat,
-            let longitude = station.lng else { throw ErrorType.serverError }
-        let newStation = Station(title: title, type: type, code: code, latitude: latitude, longitude: longitude)
+        do {
+            let newStation = try await stationDownloader.details(for: station)
+            guard let newStation else { throw ErrorType.serverError }
+            print(#fileID, #function, newStation.id)
+            destinations[direction].station = newStation
+        } catch {
+            currentError = error.localizedDescription.contains("error 0.") ? .serverError : .connectionError
+            state = .error
+            print(#fileID, #function, currentError, state)
+            throw currentError == .serverError ? ErrorType.serverError : ErrorType.connectionError
+        }
         state = .loaded
-        print(#fileID, #function, state, newStation)
-        return newStation
     }
 }
 

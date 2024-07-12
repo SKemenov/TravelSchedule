@@ -15,6 +15,7 @@ struct StationView: View {
     @ObservedObject var viewModel: TravelViewModel
 
     @State private var searchString = String()
+    @State private var isError: Bool = false
 
     private var searchingResults: [Station] {
         searchString.isEmpty
@@ -29,21 +30,23 @@ struct StationView: View {
                 SearchResultEmptyView(notification: notification)
             } else {
                 ZStack {
-                    ScrollView(.vertical) {
-                        ForEach(searchingResults) { station in
-                            Button {
-                                saveSelected(station: station)
-                            } label: {
-                                RowSearchView(rowString: station.title)
+                    ScrollView(.vertical, showsIndicators: false) {
+                        LazyVStack(spacing: .zero) {
+                            ForEach(searchingResults) { station in
+                                Button {
+                                    saveSelected(station: station)
+                                } label: {
+                                    RowSearchView(rowString: station.title)
+                                }
+                                .setRowElement()
+                                .padding(.vertical, AppSizes.Spacing.large)
                             }
-                            .setRowElement()
-                            .padding(.vertical, AppSizes.Spacing.large)
                         }
-                    }
-                    .padding(.vertical, AppSizes.Spacing.large)
-                    if viewModel.state == .loading {
-                        ProgressView()
-                            .progressViewStyle(CircularProgressViewStyle(tint: .ypBlackDuo))
+                        .padding(.vertical, AppSizes.Spacing.large)
+                        if viewModel.state == .loading {
+                            ProgressView()
+                                .progressViewStyle(CircularProgressViewStyle(tint: .ypBlackDuo))
+                        } 
                     }
                 }
             }
@@ -55,17 +58,23 @@ struct StationView: View {
             searchString = String()
             viewModel.fetchStations(for: viewModel.destinations[viewModel.direction].city)
         }
+        .sheet(isPresented: $isError, onDismiss: {
+            isError = false
+            navPath.removeAll()
+        }, content: {
+            ErrorView(errorType: viewModel.currentError)
+        })
     }
 }
 
 private extension StationView {
     func saveSelected(station: Station) {
         Task {
-            print(#fileID, #function, station)
-            let updatedStation = try await viewModel.fetchStationInfo(for: station)
-            print(#fileID, #function, updatedStation)
-            schedule.destinations[direction].station = updatedStation
-            navPath.removeAll()
+            do {
+                try await viewModel.saveSelected(station: station)
+            } catch {
+                isError = true
+            }
         }
     }
 }
