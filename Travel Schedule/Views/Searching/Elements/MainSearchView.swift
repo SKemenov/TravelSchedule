@@ -8,20 +8,13 @@
 import SwiftUI
 
 struct MainSearchView: View {
-    @Binding var schedule: Schedule
     @Binding var navPath: [ViewsRouter]
-    @Binding var directionId: Int
     @ObservedObject var viewModel: TravelViewModel
 
     var body: some View {
         HStack(alignment: .center, spacing: AppSizes.Spacing.large) {
-            DestinationsListView(
-                destinations: schedule.destinations,
-                directionId: $directionId,
-                viewModel: viewModel
-            )
-
-            SwapButtonView(destinations: $schedule.destinations)
+            DestinationsListView(viewModel: viewModel)
+            SwapButtonView(viewModel: viewModel)
         }
         .padding(AppSizes.Spacing.large)
         .background(AppColors.Universal.blue)
@@ -30,7 +23,7 @@ struct MainSearchView: View {
         .padding(.top, AppSizes.Spacing.xLarge)
         .padding(.horizontal, AppSizes.Spacing.large)
 
-        SearchButtonView(for: schedule.destinations, showView: ViewsRouter.routeView)
+        if viewModel.isSearchButtonReady { SearchButtonView(showView: ViewsRouter.routeView) }
 
         Spacer()
     }
@@ -39,9 +32,7 @@ struct MainSearchView: View {
 #Preview {
     NavigationStack {
         MainSearchView(
-            schedule: .constant(Schedule.sampleData),
             navPath: .constant([]),
-            directionId: .constant(0),
             viewModel: TravelViewModel(networkService: NetworkService())
         )
     }

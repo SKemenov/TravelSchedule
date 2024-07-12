@@ -11,9 +11,7 @@ struct CityView: View {
     private let title = "Выбор города"
     private let notification = "Город не найден"
 
-    @Binding var schedule: Schedule
     @Binding var navPath: [ViewsRouter]
-    @Binding var direction: Int
     @ObservedObject var viewModel: TravelViewModel
 
     @State private var searchString = String()
@@ -37,8 +35,7 @@ struct CityView: View {
                                 RowSearchView(rowString: city.title)
                             }
                             .simultaneousGesture(TapGesture().onEnded {
-                                schedule.destinations[direction].city = city
-                                print(city.yandexCode)
+                                viewModel.saveSelected(city: city)
                             })
                             .setRowElement()
                             .padding(.vertical, AppSizes.Spacing.large)
@@ -51,7 +48,7 @@ struct CityView: View {
         }
         .setCustomNavigationBar(title: title)
         .foregroundStyle(AppColors.LightDark.black)
-        .onAppear {
+        .task {
             searchString = String()
             viewModel.fetchCities()
         }
@@ -61,9 +58,7 @@ struct CityView: View {
 #Preview {
     NavigationStack {
         CityView(
-            schedule: .constant(Schedule.sampleData),
             navPath: .constant([]),
-            direction: .constant(0),
             viewModel: TravelViewModel(networkService: NetworkService())
         )
     }

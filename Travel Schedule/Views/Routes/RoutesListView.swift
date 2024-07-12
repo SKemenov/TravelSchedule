@@ -13,13 +13,16 @@ struct RoutesListView: View {
 
     @Binding var schedule: Schedule
     @State var currentFilter = Filter()
+    @ObservedObject var viewModel: TravelViewModel
 
     private var departure: String {
-        schedule.destinations[.departure].city.title + " (" + schedule.destinations[.departure].station.title + ") "
+        viewModel.destinations[.departure].city.title + " (" + viewModel.destinations[.departure].station.title + ") " +
+        viewModel.destinations[.departure].station.code + " "
     }
 
     private var arrival: String {
-        schedule.destinations[.arrival].city.title + " (" + schedule.destinations[.arrival].station.title + ") "
+        viewModel.destinations[.arrival].city.title + " (" + viewModel.destinations[.arrival].station.title + ") " +
+        viewModel.destinations[.arrival].station.code + " "
     }
 
     private var filteredRoutes: [Route] {
@@ -83,7 +86,7 @@ struct RoutesListView: View {
 #Preview {
     NavigationStack {
         RoutesListView(
-            schedule: .constant(Schedule.sampleData)
+            schedule: .constant(Schedule.sampleData), viewModel: TravelViewModel(networkService: NetworkService())
         )
     }
 }

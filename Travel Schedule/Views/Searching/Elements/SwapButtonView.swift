@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct SwapButtonView: View {
-    @Binding var destinations: [Destination]
+    @ObservedObject var viewModel: TravelViewModel
 
     var body: some View {
         ZStack {
@@ -16,7 +16,7 @@ struct SwapButtonView: View {
                 .foregroundStyle(AppColors.Universal.white)
                 .frame(width: AppSizes.Size.swappingButton)
             Button {
-                swapDestinations()
+                viewModel.swapDestinations()
             } label: {
                 AppImages.Icons.swap
                     .foregroundStyle(AppColors.Universal.blue)
@@ -25,11 +25,8 @@ struct SwapButtonView: View {
     }
 }
 
-private extension SwapButtonView {
-    func swapDestinations() {
-        (destinations[.departure], destinations[.arrival]) = (destinations[.arrival], destinations[.departure])
-    }
-}
 #Preview {
-    SwapButtonView(destinations: .constant(Destination.sampleData))
+    SwapButtonView(viewModel: TravelViewModel(networkService: NetworkService()))
+        .padding()
+        .background(AppColors.Universal.red.opacity(0.5))
 }

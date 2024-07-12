@@ -9,9 +9,7 @@ import SwiftUI
 
 struct RootTabView: View {
     @Binding var schedule: Schedule
-//    @State var schedule = Schedule.sampleData
     @State var navPath: [ViewsRouter] = []
-    @State var direction: Int = .departure
     @State var stories: [Story] = Story.mockData
     @StateObject var viewModel = TravelViewModel(networkService: NetworkService())
 
@@ -20,9 +18,7 @@ struct RootTabView: View {
             TabView {
                 SearchTabView(
                     stories: $stories,
-                    schedule: $schedule,
                     navPath: $navPath,
-                    direction: $direction,
                     viewModel: viewModel
                 )
                     .tabItem {
@@ -33,28 +29,27 @@ struct RootTabView: View {
                         AppImages.Tabs.settings
                     }
             }
+            .task {
+                viewModel.fetchData()
+            }
             .accentColor(AppColors.LightDark.black)
             .toolbar(.visible, for: .tabBar)
             .navigationDestination(for: ViewsRouter.self) { pathValue in
                 switch pathValue {
                     case .cityView:
                         CityView(
-                            schedule: $schedule,
                             navPath: $navPath,
-                            direction: $direction,
                             viewModel: viewModel
                         )
                             .toolbar(.hidden, for: .tabBar)
                     case .stationView:
                         StationView(
-                            schedule: $schedule,
                             navPath: $navPath,
-                            direction: $direction,
                             viewModel: viewModel
                         )
                             .toolbar(.hidden, for: .tabBar)
                     case .routeView:
-                        RoutesListView(schedule: $schedule)
+                        RoutesListView(schedule: $schedule, viewModel: viewModel)
                             .toolbar(.hidden, for: .tabBar)
                 }
             }

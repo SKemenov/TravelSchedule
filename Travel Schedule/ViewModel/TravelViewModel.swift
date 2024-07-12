@@ -9,17 +9,35 @@ import Foundation
 
 @MainActor
 final class TravelViewModel: ObservableObject {
-    @Published private (set) var cities: [City] = []
-    @Published private (set) var stations: [Station] = []
     @Published private (set) var state: State = .loading
-    private let networkService: NetworkService
-    private var store: StationsList?
+    @Published private (set) var cities: [City]
+    @Published private (set) var stations: [Station]
 
-    init(networkService: NetworkService) {
-        self.networkService = networkService
-        self.fetchData()
+    @Published private (set) var routes: [Route] = []
+    @Published private (set) var carriers: [Carrier] = []
+
+    @Published private (set) var destinations: [Destination]
+    @Published private (set) var direction: Int = .departure
+    var isSearchButtonReady: Bool {
+        !destinations[.departure].city.title.isEmpty &&
+        !destinations[.departure].station.title.isEmpty &&
+        !destinations[.arrival].city.title.isEmpty &&
+        !destinations[.arrival].station.title.isEmpty
     }
 
+    private let networkService: NetworkService
+    private var store: [Components.Schemas.Settlements] = []
+
+    init(
+        networkService: NetworkService,
+        cities: [City] = [],
+        stations: [Station] = [],
+        destinations: [Destination] = Destination.emptyDestination
+    ) {
+        self.networkService = networkService
+        self.cities = cities
+        self.stations = stations
+        self.destinations = destinations
     }
 
     func fetchData() {
@@ -86,7 +104,19 @@ final class TravelViewModel: ObservableObject {
         }
     }
 
-    func fetchStationInfo(for station: Station) async throws -> Station {
+    func swapDestinations() {
+        (destinations[.departure], destinations[.arrival]) = (destinations[.arrival], destinations[.departure])
+    }
+
+    func setDirection(to direction: Int) {
+        self.direction = direction
+    }
+
+    func saveSelected(city: City) {
+        destinations[direction].city = city
+    }
+
+    func saveSelected(station: Station) async throws {
         state = .loading
         print(#fileID, #function, state)
         let service = NearestStationsService(client: networkService.client)
@@ -122,7 +152,7 @@ private extension TravelViewModel {
     func convert(from station: Components.Schemas.SettlementsStations) -> Station? {
         guard
             let type = station.station_type,
-            type == "airport" || type == "train_station" || type == "river_port",
+            type == "airport" || type == "train_station" || type == "river_port", // made list a little bit shorter
             let titleRawValue = station.title,
             let longitudeRawValue = station.longitude,
             let latitudeRawValue = station.latitude else { return nil }
@@ -159,7 +189,7 @@ private extension TravelViewModel {
 }
 extension TravelViewModel {
     enum State: Equatable {
-        case loading, loaded, error(ErrorType)
+        case loading, loaded, error //error(ErrorType)
 
 //        static func == (lhs: TravelViewModel.State, rhs: TravelViewModel.State) -> Bool {
 //            switch (lhs, rhs) {

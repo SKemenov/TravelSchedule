@@ -8,15 +8,13 @@
 import SwiftUI
 
 struct DestinationsListView: View {
-    let destinations: [Destination]
     private let dummyDirection = ["Откуда", "Куда"]
-    @Binding var directionId: Int
     @ObservedObject var viewModel: TravelViewModel
 
     var body: some View {
         ZStack {
             VStack(alignment: .leading, spacing: .zero) {
-                ForEach(Array(destinations.enumerated()), id: \.offset) { index, destination in
+                ForEach(Array(viewModel.destinations.enumerated()), id: \.offset) { index, destination in
                     let city = destination.city.title
                     let station = destination.station.title.isEmpty
                         ? ""
@@ -40,7 +38,7 @@ struct DestinationsListView: View {
                         .frame(maxWidth: .infinity, maxHeight: AppSizes.Height.searchingRow)
                     }
                     .simultaneousGesture(TapGesture().onEnded {
-                        directionId = index
+                        viewModel.setDirection(to: index)
                     })
                 }
             }
@@ -54,19 +52,13 @@ struct DestinationsListView: View {
     }
 }
 
-
 #Preview {
     VStack {
-        DestinationsListView(
-            destinations: Destination.emptyDestination,
-            directionId: .constant(0),
-            viewModel: TravelViewModel(networkService: NetworkService())
-        )
-        DestinationsListView(
-            destinations: Destination.sampleData,
-            directionId: .constant(0),
-            viewModel: TravelViewModel(networkService: NetworkService())
-        )
+        DestinationsListView(viewModel: TravelViewModel(networkService: NetworkService()))
+        DestinationsListView(viewModel: TravelViewModel(
+            networkService: NetworkService(),
+            destinations: Destination.sampleData
+        ))
     }
     .padding()
     .background(AppColors.Universal.blue)

@@ -11,9 +11,7 @@ struct StationView: View {
     private let title = "Выбор станции"
     private let notification = "Станция не найдена"
 
-    @Binding var schedule: Schedule
     @Binding var navPath: [ViewsRouter]
-    @Binding var direction: Int
     @ObservedObject var viewModel: TravelViewModel
 
     @State private var searchString = String()
@@ -53,9 +51,9 @@ struct StationView: View {
         }
         .setCustomNavigationBar(title: title)
         .foregroundStyle(AppColors.LightDark.black)
-        .onAppear {
+        .task {
             searchString = String()
-            viewModel.fetchStations(for: schedule.destinations[direction].city)
+            viewModel.fetchStations(for: viewModel.destinations[viewModel.direction].city)
         }
     }
 }
@@ -75,9 +73,7 @@ private extension StationView {
 #Preview {
     NavigationStack {
         StationView(
-            schedule: .constant(Schedule.sampleData),
             navPath: .constant([]),
-            direction: .constant(.departure),
             viewModel: TravelViewModel(networkService: NetworkService())
         )
     }
