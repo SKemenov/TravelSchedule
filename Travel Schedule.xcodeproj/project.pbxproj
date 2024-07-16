@@ -59,7 +59,7 @@
 		E98703732C0E3690006495B8 /* FilterConnectionSectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E98703722C0E3690006495B8 /* FilterConnectionSectionView.swift */; };
 		E98962DC2BA0EAD5005A84BA /* AuthenticationClientMiddleware.swift in Sources */ = {isa = PBXBuildFile; fileRef = E98962DB2BA0EAD5005A84BA /* AuthenticationClientMiddleware.swift */; };
 		E98962E12BA0EE54005A84BA /* CopyrightService.swift in Sources */ = {isa = PBXBuildFile; fileRef = E98962E02BA0EE54005A84BA /* CopyrightService.swift */; };
-		E993D4D32C405E160019AE7F /* StationDownloader.swift in Sources */ = {isa = PBXBuildFile; fileRef = E993D4D22C405E160019AE7F /* StationDownloader.swift */; };
+		E993D4D32C405E160019AE7F /* StationsDownloader.swift in Sources */ = {isa = PBXBuildFile; fileRef = E993D4D22C405E160019AE7F /* StationsDownloader.swift */; };
 		E9950E0F2C0DE6F500EDC6D0 /* RouteCarrierView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9950E0E2C0DE6F500EDC6D0 /* RouteCarrierView.swift */; };
 		E99D5D842C1221BE00ED5184 /* Story.swift in Sources */ = {isa = PBXBuildFile; fileRef = E99D5D832C1221BE00ED5184 /* Story.swift */; };
 		E99D5D862C12239800ED5184 /* StoryPreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E99D5D852C12239800ED5184 /* StoryPreviewView.swift */; };
@@ -70,7 +70,6 @@
 		E9A49C2A2BD2A04800017734 /* Destination.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9A49C292BD2A04800017734 /* Destination.swift */; };
 		E9A49C2F2BD2A1CC00017734 /* City.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9A49C2E2BD2A1CC00017734 /* City.swift */; };
 		E9A49C312BD2A1F700017734 /* Station.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9A49C302BD2A1F700017734 /* Station.swift */; };
-		E9A49C332BD2A21C00017734 /* Schedule.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9A49C322BD2A21C00017734 /* Schedule.swift */; };
 		E9A49C352BD2A38900017734 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9A49C342BD2A38900017734 /* SettingsView.swift */; };
 		E9A49C3C2BD2B5D200017734 /* CityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9A49C3B2BD2B5D200017734 /* CityView.swift */; };
 		E9A49C402BD2B83800017734 /* StationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9A49C3F2BD2B83800017734 /* StationView.swift */; };
@@ -153,7 +152,7 @@
 		E98703722C0E3690006495B8 /* FilterConnectionSectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterConnectionSectionView.swift; sourceTree = "<group>"; };
 		E98962DB2BA0EAD5005A84BA /* AuthenticationClientMiddleware.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationClientMiddleware.swift; sourceTree = "<group>"; };
 		E98962E02BA0EE54005A84BA /* CopyrightService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CopyrightService.swift; sourceTree = "<group>"; };
-		E993D4D22C405E160019AE7F /* StationDownloader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StationDownloader.swift; sourceTree = "<group>"; };
+		E993D4D22C405E160019AE7F /* StationsDownloader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StationsDownloader.swift; sourceTree = "<group>"; };
 		E9950E0E2C0DE6F500EDC6D0 /* RouteCarrierView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteCarrierView.swift; sourceTree = "<group>"; };
 		E99D5D832C1221BE00ED5184 /* Story.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Story.swift; sourceTree = "<group>"; };
 		E99D5D852C12239800ED5184 /* StoryPreviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoryPreviewView.swift; sourceTree = "<group>"; };
@@ -164,7 +163,6 @@
 		E9A49C292BD2A04800017734 /* Destination.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Destination.swift; sourceTree = "<group>"; };
 		E9A49C2E2BD2A1CC00017734 /* City.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = City.swift; sourceTree = "<group>"; };
 		E9A49C302BD2A1F700017734 /* Station.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Station.swift; sourceTree = "<group>"; };
-		E9A49C322BD2A21C00017734 /* Schedule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Schedule.swift; sourceTree = "<group>"; };
 		E9A49C342BD2A38900017734 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		E9A49C3B2BD2B5D200017734 /* CityView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CityView.swift; sourceTree = "<group>"; };
 		E9A49C3F2BD2B83800017734 /* StationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StationView.swift; sourceTree = "<group>"; };
@@ -370,7 +368,7 @@
 			children = (
 				E9809B5C2C2E8A92007980BD /* SettingsViewModel.swift */,
 				E91B90992C30751D00C1CA3E /* TravelViewModel.swift */,
-				E993D4D22C405E160019AE7F /* StationDownloader.swift */,
+				E993D4D22C405E160019AE7F /* StationsDownloader.swift */,
 				E93542AA2C40F8B90090DD53 /* RoutesDownloader.swift */,
 			);
 			path = ViewModel;
@@ -398,7 +396,6 @@
 				E9A49C292BD2A04800017734 /* Destination.swift */,
 				E9A49C2E2BD2A1CC00017734 /* City.swift */,
 				E9A49C302BD2A1F700017734 /* Station.swift */,
-				E9A49C322BD2A21C00017734 /* Schedule.swift */,
 				E936A6372BD78C4300CB08F7 /* Route.swift */,
 				E936A63A2BD78FE700CB08F7 /* Carrier.swift */,
 				E91BC4C12BD85410003FF64D /* Filter.swift */,
@@ -639,7 +636,7 @@
 				E909C8472BA1186A00D67B65 /* SearchService.swift in Sources */,
 				E936A6352BD78BC900CB08F7 /* RoutesListView.swift in Sources */,
 				E99D5D862C12239800ED5184 /* StoryPreviewView.swift in Sources */,
-				E993D4D32C405E160019AE7F /* StationDownloader.swift in Sources */,
+				E993D4D32C405E160019AE7F /* StationsDownloader.swift in Sources */,
 				E9F9EBC52C0DE7A900A7AECB /* RouteTimeView.swift in Sources */,
 				E9A49C2F2BD2A1CC00017734 /* City.swift in Sources */,
 				E936A6322BD78B0400CB08F7 /* PreviewStoriesView.swift in Sources */,
@@ -663,7 +660,6 @@
 				E96F720D2BD9939100EE294E /* Int+Extensions.swift in Sources */,
 				E94ABCB92C0EE3350091B28B /* TimerConfiguration.swift in Sources */,
 				E911F5592C0E2A5C003409F2 /* CheckboxView.swift in Sources */,
-				E9A49C332BD2A21C00017734 /* Schedule.swift in Sources */,
 				E936A61A2BD5C16F00CB08F7 /* AgreementView.swift in Sources */,
 				E9EC1C1B2C0DC91C00FC85ED /* SwapButtonView.swift in Sources */,
 				E936A6152BD5BB7700CB08F7 /* RowSearchView.swift in Sources */,

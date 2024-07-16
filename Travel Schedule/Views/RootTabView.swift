@@ -8,20 +8,10 @@
 import SwiftUI
 
 struct RootTabView: View {
-//    private let networkService: NetworkService
     @State var navPath: [ViewsRouter] = []
     @State var stories: [Story] = Story.mockData
     @State private var isError: Bool = false
     @StateObject var viewModel = TravelViewModel(networkService: NetworkService())
-
-//    init() {
-//        do {
-//            networkService = try NetworkService()
-//        } catch {
-//            preconditionFailure("Cannot obtain server URL")
-//        }
-//        _viewModel = StateObject(wrappedValue: TravelViewModel(networkService: networkService))
-//    }
 
     var body: some View {
         NavigationStack(path: $navPath) {

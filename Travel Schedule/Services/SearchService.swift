@@ -24,7 +24,6 @@ final class SearchService: SearchServiceProtocol {
 
     func getSearches(from fromStation: String, to toStation: String, with transfers: Bool) async throws -> Searches {
         let date = String(Date.now.ISO8601Format().prefix(10))
-        print(#fileID, #function, date)
         let response = try await client.getSearches(
             query: .init(from: fromStation, to: toStation, date: date, transfers: transfers)
         )

@@ -41,7 +41,7 @@ final class TravelViewModel: ObservableObject {
 
     private let networkService: NetworkService
     private var store: [Components.Schemas.Settlements] = []
-    private var stationDownloader: StationDownloader
+    private var stationsDownloader: StationsDownloader
     private var routesDownloader: RoutesDownloader
 
     init(
@@ -54,7 +54,7 @@ final class TravelViewModel: ObservableObject {
         self.cities = cities
         self.stations = stations
         self.destinations = destinations
-        self.stationDownloader = StationDownloader(networkService: networkService)
+        self.stationsDownloader = StationsDownloader(networkService: networkService)
         self.routesDownloader = RoutesDownloader(networkService: networkService)
     }
 
@@ -62,12 +62,11 @@ final class TravelViewModel: ObservableObject {
         Task {
             state = .loading
             do {
-                store = try await stationDownloader.fetchData()
+                store = try await stationsDownloader.fetchData()
                 state = .loaded
             } catch {
                 currentError = error.localizedDescription.contains("error 0.") ? .serverError : .connectionError
                 state = .error
-                print(#fileID, #function, currentError, state, error.localizedDescription)
                 throw currentError == .serverError ? ErrorType.serverError : ErrorType.connectionError
             }
         }
@@ -109,7 +108,6 @@ final class TravelViewModel: ObservableObject {
                     }
                 }
             }
-            print(#fileID, #function, type)
             let sortedStations = convertedStations.sorted { $0.title < $1.title }
             var customSortedStations = sortedStations.filter { $0.type == "airport" }
             customSortedStations += sortedStations.filter { $0.type == "train_station" }
@@ -152,7 +150,6 @@ final class TravelViewModel: ObservableObject {
         } catch {
             currentError = error.localizedDescription.contains("error 16.") ? .serverError : .connectionError
             state = .error
-            print(#fileID, #function, currentError, state, error.localizedDescription)
             throw currentError == .serverError ? ErrorType.serverError : ErrorType.connectionError
         }
 
@@ -181,8 +178,6 @@ final class TravelViewModel: ObservableObject {
                     carrierCode: carrierCode
                 )
                 convertedRoutes.append(route)
-            } else {
-                print(#fileID, #function, hasTransfers)
             }
         }
         routes = convertedRoutes
@@ -212,7 +207,6 @@ private extension TravelViewModel {
             phone: carrier.phone ?? "",
             contacts: carrier.contacts ?? ""
         )
-        print(#fileID, #function, convertedCarrier)
         if convertedCarrier.code != 0 {
             carriers.append(convertedCarrier)
         }

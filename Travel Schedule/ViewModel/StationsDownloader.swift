@@ -1,5 +1,5 @@
 //
-//  StationDownloader.swift
+//  StationsDownloader.swift
 //  Travel Schedule
 //
 //  Created by Sergey Kemenov on 11.07.2024.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-actor StationDownloader {
+actor StationsDownloader {
     private var cache: [Components.Schemas.Settlements] = []
     private let networkService: NetworkService
 

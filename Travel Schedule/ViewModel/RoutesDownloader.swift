@@ -15,7 +15,6 @@ actor RoutesDownloader {
     }
 
     func fetchData(from departure: Station, to arrival: Station) async throws -> [Components.Schemas.Segment] {
-        print("\n", #fileID, #function, "start searching routes from ", departure.code, " to ", arrival.code)
         let service = SearchService(client: networkService.client)
         let response = try await service.getSearches(from: departure.code, to: arrival.code, with: true)
         guard let segments = response.segments else { throw ErrorType.serverError }

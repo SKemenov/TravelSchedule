@@ -26,7 +26,6 @@ final class SettingsViewModel: ObservableObject {
                 let response = try await service.getCopyright()
                 copyrightInfo = response.copyright?.text ?? ""
             } catch {
-                print(error.localizedDescription)
                 throw ErrorType.connectionError
             }
         }
