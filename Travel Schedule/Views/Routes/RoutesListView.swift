@@ -11,7 +11,6 @@ struct RoutesListView: View {
     private let notification = "Вариантов нет"
     private let buttonTitle = "Уточнить время"
 
-    @Binding var schedule: Schedule
     @State var currentFilter = Filter()
     @ObservedObject var viewModel: TravelViewModel
 
@@ -27,8 +26,8 @@ struct RoutesListView: View {
 
     private var filteredRoutes: [Route] {
         let complexRoutes = currentFilter.isWithTransfers
-            ? schedule.routes
-            : schedule.routes.filter { $0.isDirect == true }
+            ? viewModel.routes
+            : viewModel.routes.filter { $0.isDirect == true }
         var allRoutes = currentFilter.isAtNight
             ? complexRoutes.filter { $0.departureTime.starts(with: /0[0-5]/) }
             : []
@@ -49,12 +48,12 @@ struct RoutesListView: View {
             (Text(departure) + Text(AppImages.Icons.arrow).baselineOffset(-1) + Text(arrival))
                 .font(AppFonts.Bold.medium)
 
-            if filteredRoutes.isEmpty {
+            if viewModel.state != .loading && filteredRoutes.isEmpty {
                 SearchResultEmptyView(notification: notification)
             } else {
                 ScrollView(.vertical) {
                     ForEach(filteredRoutes) { route in
-                        if let carrier = schedule.carriers.first(where: { $0.id == route.carrierID }) {
+                        if let carrier = viewModel.carriers.first(where: { $0.code == route.carrierCode }) {
                             NavigationLink {
                                 CarrierView(carrier: carrier)
                             } label: {

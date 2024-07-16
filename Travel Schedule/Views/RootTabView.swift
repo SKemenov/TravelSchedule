@@ -49,7 +49,9 @@ struct RootTabView: View {
                         )
                             .toolbar(.hidden, for: .tabBar)
                     case .routeView:
-                        RoutesListView(schedule: $schedule, viewModel: viewModel)
+                        RoutesListView(
+                            viewModel: viewModel
+                        )
                             .toolbar(.hidden, for: .tabBar)
                 }
             }
@@ -58,6 +60,7 @@ struct RootTabView: View {
 }
 
 #Preview {
-    RootTabView(schedule: .constant(Schedule.sampleData))
+//    RootTabView(schedule: .constant(Schedule.sampleData))
+    RootTabView()
         .environmentObject(SettingsViewModel(networkService: NetworkService()))
 }

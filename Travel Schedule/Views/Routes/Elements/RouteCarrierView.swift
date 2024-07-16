@@ -32,7 +32,7 @@ struct RouteCarrierView: View {
                     }
                 }
                 Spacer()
-                Text(route.date)
+                Text(route.date.getLocalizedShortDate)
                     .font(AppFonts.Regular.small)
                     .foregroundStyle(AppColors.Universal.black)
             }

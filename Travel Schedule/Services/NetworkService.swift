@@ -92,7 +92,7 @@ extension NetworkService {
         let service = SearchService(client: client)
         Task {
             do {
-                let response = try await service.getSearches(from: "s9623561", to: "s9600213")
+                let response = try await service.getSearches(from: "s9623561", to: "s9600213", with: false)
                 guard
                     let segments = response.segments,
                     let intervalSegments = response.interval_segments,
@@ -143,7 +143,8 @@ extension NetworkService {
         let service = CarriersService(client: client)
         Task {
             do {
-                let response = try await service.getCarriers(code: "SU", system: .iata)
+                let response = try await service.getCarriers(code: 129)
+//                let response = try await service.getCarriers(code: "SU", system: .iata)
                 print(response)
             } catch {
                 print(error.localizedDescription)

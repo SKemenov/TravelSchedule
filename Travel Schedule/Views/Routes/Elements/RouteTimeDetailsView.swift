@@ -8,7 +8,6 @@
 import SwiftUI
 
 struct RouteTimeDetailsView: View {
-    private let duration = "часов"
     enum FieldPosition {
         case left, center, right
     }
@@ -31,7 +30,7 @@ struct RouteTimeDetailsView: View {
             case .center:
                 self.font = AppFonts.Regular.small
                 self.edge = .horizontal
-                self.title = "\(route.durationTime) " + duration
+                self.title = route.durationTime
             case .right:
                 self.font = AppFonts.Regular.medium
                 self.edge = .leading

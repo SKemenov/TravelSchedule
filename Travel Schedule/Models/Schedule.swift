@@ -13,7 +13,7 @@ struct Schedule: Hashable, Identifiable {
     var cities: [City]
     let stations: [Station]
     var destinations: [Destination]
-    let routes: [Route]
+    var routes: [Route]
     let carriers: [Carrier]
 }
 
@@ -23,7 +23,7 @@ extension Schedule {
         cities: City.sampleData,
         stations: Station.sampleData,
         destinations: Destination.emptyDestination,
-        routes: Route.sampleData,
+        routes: [],
         carriers: Carrier.sampleData
     )
 }

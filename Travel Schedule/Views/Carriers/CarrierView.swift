@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct CarrierView: View {
-    private let title = "ИНформация о перевозчике"
+    private let title = "Информация о перевозчике"
 
     @State var carrier: Carrier
 

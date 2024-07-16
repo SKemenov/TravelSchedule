@@ -30,6 +30,7 @@ final class TravelViewModel: ObservableObject {
     private let networkService: NetworkService
     private var store: [Components.Schemas.Settlements] = []
     private var stationDownloader: StationDownloader
+    private var routesDownloader: RoutesDownloader
 
     init(
         networkService: NetworkService,
@@ -42,14 +43,27 @@ final class TravelViewModel: ObservableObject {
         self.stations = stations
         self.destinations = destinations
         self.stationDownloader = StationDownloader(networkService: networkService)
+        self.routesDownloader = RoutesDownloader(networkService: networkService)
     }
 
     func fetchData() {
         Task {
+            if !store.isEmpty { return }
             state = .loading
             let service = StationsListService(client: networkService.client)
-            let stations = try await service.getStationsList()
-            store = stations
+            let response = try await service.getStationsList()
+            var settlements: [Components.Schemas.Settlements] = []
+            guard let countries = response.countries else { return }
+            countries.forEach {
+                if $0.title == "Украина" { return } // API has station's titles, but hasn't station's codes
+                $0.regions?.forEach {
+                    $0.settlements?.forEach { settlement in
+                        settlements.append(settlement)
+                    }
+                }
+            }
+            store = settlements
+
             state = .loaded
         }
     }
@@ -58,26 +72,18 @@ final class TravelViewModel: ObservableObject {
         Task {
             state = .loading
             var newList: [City] = []
-            guard
-                let store,
-                let countries = store.countries else { return }
-            countries.forEach {
-                $0.regions?.forEach {
-                    $0.settlements?.forEach { settlement in
-                        guard
-                            let settlementTitle = settlement.title,
-                            let settlementCodes = settlement.codes,
-                            let yandexCode = settlementCodes.yandex_code,
-                            let settlementStations = settlement.stations else { return }
-                        newList.append(
-                            City(
-                                title: settlementTitle,
-                                yandexCode: yandexCode,
-                                stationsCount: settlementStations.count
-                            )
-                        )
-                    }
-                }
+            store.forEach { settlement in
+                guard
+                    let title = settlement.title,
+                    let settlementCodes = settlement.codes,
+                    let yandexCode = settlementCodes.yandex_code,
+                    let settlementStations = settlement.stations else { return }
+                let newCity = City(
+                    title: title,
+                    yandexCode: yandexCode,
+                    stationsCount: settlementStations.count
+                )
+                newList.append(newCity)
             }
             cities = newList.sorted { $0.stationsCount > $1.stationsCount }
             state = .loaded
@@ -88,18 +94,11 @@ final class TravelViewModel: ObservableObject {
         Task {
             state = .loading
             var newList: [Station] = []
-            guard
-                let store,
-                let countries = store.countries else { return }
-            countries.forEach {
-                $0.regions?.forEach {
-                    $0.settlements?.forEach {
-                        if $0.codes?.yandex_code == city.yandexCode {
-                            $0.stations?.forEach { station in
-                                guard let station = convert(from: station) else { return }
-                                newList.append(station)
-                            }
-                        }
+            store.forEach {
+                if $0.codes?.yandex_code == city.yandexCode {
+                    $0.stations?.forEach { station in
+                        guard let station = convert(from: station) else { return }
+                        newList.append(station)
                     }
                 }
             }
