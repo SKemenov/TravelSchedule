@@ -19,7 +19,6 @@ struct Route: Hashable, Identifiable {
         connectionStation.isEmpty
     }
     let carrierCode: Int
-//    let carrierID: UUID
 }
 
 extension Route {
@@ -30,9 +29,8 @@ extension Route {
             departureTime: "22:30",
             arrivalTime: "08:15",
             durationTime: "20 часов",
-            connectionStation: "Костроме", 
+            connectionStation: "Костроме",
             carrierCode: 129
-//            carrierID: Carrier.sampleData[0].id
         ),
         Route(
             code: "020U_6_2",

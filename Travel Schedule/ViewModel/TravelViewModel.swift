@@ -20,6 +20,18 @@ final class TravelViewModel: ObservableObject {
     @Published private (set) var direction: Int = .departure
     @Published private (set) var currentError: ErrorType = .serverError
 
+    var departure: String {
+        destinations[.departure].station.title.contains(destinations[.departure].city.title)
+        ? destinations[.departure].station.title
+        : destinations[.departure].city.title + " (" + destinations[.departure].station.title + ")"
+    }
+
+    var arrival: String {
+        destinations[.arrival].station.title.contains(destinations[.arrival].city.title)
+        ? destinations[.arrival].station.title
+        : destinations[.arrival].city.title + " (" + destinations[.arrival].station.title + ")"
+    }
+
     var isSearchButtonReady: Bool {
         !destinations[.departure].city.title.isEmpty &&
         !destinations[.departure].station.title.isEmpty &&
@@ -46,46 +58,39 @@ final class TravelViewModel: ObservableObject {
         self.routesDownloader = RoutesDownloader(networkService: networkService)
     }
 
-    func fetchData() {
+    func fetchData() throws {
         Task {
-            if !store.isEmpty { return }
             state = .loading
-            let service = StationsListService(client: networkService.client)
-            let response = try await service.getStationsList()
-            var settlements: [Components.Schemas.Settlements] = []
-            guard let countries = response.countries else { return }
-            countries.forEach {
-                if $0.title == "Украина" { return } // API has station's titles, but hasn't station's codes
-                $0.regions?.forEach {
-                    $0.settlements?.forEach { settlement in
-                        settlements.append(settlement)
-                    }
-                }
+            do {
+                store = try await stationDownloader.fetchData()
+                state = .loaded
+            } catch {
+                currentError = error.localizedDescription.contains("error 0.") ? .serverError : .connectionError
+                state = .error
+                print(#fileID, #function, currentError, state, error.localizedDescription)
+                throw currentError == .serverError ? ErrorType.serverError : ErrorType.connectionError
             }
-            store = settlements
-
-            state = .loaded
         }
     }
 
     func fetchCities() {
         Task {
             state = .loading
-            var newList: [City] = []
+            var convertedCities: [City] = []
             store.forEach { settlement in
                 guard
                     let title = settlement.title,
                     let settlementCodes = settlement.codes,
                     let yandexCode = settlementCodes.yandex_code,
                     let settlementStations = settlement.stations else { return }
-                let newCity = City(
+                let city = City(
                     title: title,
                     yandexCode: yandexCode,
                     stationsCount: settlementStations.count
                 )
-                newList.append(newCity)
+                convertedCities.append(city)
             }
-            cities = newList.sorted { $0.stationsCount > $1.stationsCount }
+            cities = convertedCities.sorted { $0.stationsCount > $1.stationsCount }
             state = .loaded
         }
     }
@@ -93,16 +98,29 @@ final class TravelViewModel: ObservableObject {
     func fetchStations(for city: City) {
         Task {
             state = .loading
-            var newList: [Station] = []
+            var convertedStations: [Station] = []
+            var type: Set<String> = []
             store.forEach {
                 if $0.codes?.yandex_code == city.yandexCode {
-                    $0.stations?.forEach { station in
-                        guard let station = convert(from: station) else { return }
-                        newList.append(station)
+                    $0.stations?.forEach { settlementStation in
+                        guard let station = convert(from: settlementStation) else { return }
+                        type.insert(station.type)
+                        convertedStations.append(station)
                     }
                 }
             }
-            stations = newList.sorted { $0.title < $1.title }
+            print(#fileID, #function, type)
+            let sortedStations = convertedStations.sorted { $0.title < $1.title }
+            var customSortedStations = sortedStations.filter { $0.type == "airport" }
+            customSortedStations += sortedStations.filter { $0.type == "train_station" }
+            customSortedStations += sortedStations.filter { $0.type == "marine_station" }
+            customSortedStations += sortedStations.filter { $0.type == "river_port" }
+            customSortedStations += sortedStations.filter { $0.type == "bus_station" }
+            customSortedStations += sortedStations.filter {
+                $0.type != "airport" && $0.type != "train_station" && $0.type != "marine_station"
+                && $0.type != "river_port" && $0.type != "bus_station"
+            }
+            stations = customSortedStations
             state = .loaded
         }
     }
@@ -119,62 +137,101 @@ final class TravelViewModel: ObservableObject {
         destinations[direction].city = city
     }
 
-    func saveSelected(station: Station) async throws {
-        state = .loading
-//        let service = NearestStationsService(client: networkService.client)
-//        let response = try await service.getNearestStations(
-//            lat: station.latitude,
-//            lng: station.longitude,
-//            distance: 0.1
-//        )
-//        guard
-//            let stations = response.stations,
-//            !stations.isEmpty,
-//            let station = stations.first(where: { $0.station_type == station.type }),
-//            let type = station.station_type,
-//            let titleRawValue = station.title,
-//            let popularTitleRawValue = station.popular_title,
-//            let code = station.code,
-//            let latitude = station.lat,
-//            let longitude = station.lng else { throw ErrorType.serverError }
-//        let title = !popularTitleRawValue.isEmpty
-//            ? popularTitleRawValue
-//            : type == "airport"
-//                ? ["аэропорт", titleRawValue].joined(separator: " ")
-//                : titleRawValue
-//        let newStation = Station(title: title, type: type, code: code, latitude: latitude, longitude: longitude)
+    func saveSelected(station: Station) {
+        destinations[direction].station = station
+    }
 
+    func searchRoutes() async throws {
+        state = .loading
+        var segments: [Components.Schemas.Segment] = []
         do {
-            let newStation = try await stationDownloader.details(for: station)
-            guard let newStation else { throw ErrorType.serverError }
-            print(#fileID, #function, newStation.id)
-            destinations[direction].station = newStation
+            segments = try await routesDownloader.fetchData(
+                from: destinations[.departure].station,
+                to: destinations[.arrival].station
+            )
         } catch {
-            currentError = error.localizedDescription.contains("error 0.") ? .serverError : .connectionError
+            currentError = error.localizedDescription.contains("error 16.") ? .serverError : .connectionError
             state = .error
-            print(#fileID, #function, currentError, state)
+            print(#fileID, #function, currentError, state, error.localizedDescription)
             throw currentError == .serverError ? ErrorType.serverError : ErrorType.connectionError
         }
-        state = .loaded
+
+        var convertedRoutes: [Route] = []
+        segments.forEach { segment in
+            let hasTransfers = segment.has_transfers ?? false
+            if !hasTransfers {
+                guard let duration = segment.duration else { return }
+                let uid = segment.thread?.uid ?? "ND"
+                let type = segment.from?.transport_type ?? "ND"
+                guard
+                    let carrier = segment.thread?.carrier,
+                    let carrierCode = carrier.code else { return }
+
+                if carriers.filter({ $0.code == carrierCode }).isEmpty {
+                    convert(from: carrier, for: type)
+                }
+
+                let route = Route(
+                    code: uid,
+                    date: segment.start_date ?? "today",
+                    departureTime: (segment.departure ?? "").returnTimeString,
+                    arrivalTime: (segment.arrival ?? "").returnTimeString,
+                    durationTime: duration.getLocalizedInterval,
+                    connectionStation: String(),
+                    carrierCode: carrierCode
+                )
+                convertedRoutes.append(route)
+            } else {
+                print(#fileID, #function, hasTransfers)
+            }
+        }
+        routes = convertedRoutes
+        state = routes.isEmpty ? .none : .loaded
+    }
+
+    func resetRoutes() {
+        routes = []
     }
 }
 
 private extension TravelViewModel {
+    func convert(from carrier: Components.Schemas.Carrier, for type: String) {
+        var placeholder = String()
+        switch type {
+            case "plane": placeholder = "airplane"
+            case "train", "suburban": placeholder = "cablecar"
+            case "water": placeholder = "ferry"
+            default: placeholder = "bus"
+        }
+        let convertedCarrier = Carrier(
+            code: carrier.code ?? 0,
+            title: carrier.title ?? "ND",
+            logoUrl: carrier.logo ?? "",
+            placeholder: placeholder,
+            email: carrier.email ?? "",
+            phone: carrier.phone ?? "",
+            contacts: carrier.contacts ?? ""
+        )
+        print(#fileID, #function, convertedCarrier)
+        if convertedCarrier.code != 0 {
+            carriers.append(convertedCarrier)
+        }
+    }
+
     func convert(from station: Components.Schemas.SettlementsStations) -> Station? {
         guard
             let type = station.station_type,
-            type == "airport" || type == "train_station" || type == "river_port", // made list a little bit shorter
             let titleRawValue = station.title,
+            let code = station.codes?.yandex_code,
             let longitudeRawValue = station.longitude,
             let latitudeRawValue = station.latitude else { return nil }
         let latitude = extract(latitude: latitudeRawValue)
         let longitude = extract(longitude: longitudeRawValue)
-        let title = type == "airport" ? ["аэропорт", titleRawValue].joined(separator: " ") : titleRawValue
         if latitude == 0 && longitude == 0 { return nil }
         return Station(
-            title: title,
+            title: type == "airport" ? ["Аэропорт", titleRawValue].joined(separator: " ") : titleRawValue,
             type: type,
-            code: "",
+            code: code,
             latitude: latitude,
             longitude: longitude
         )
@@ -198,17 +255,9 @@ private extension TravelViewModel {
         return coordinate
     }
 }
+
 extension TravelViewModel {
     enum State: Equatable {
-        case loading, loaded, error //error(ErrorType)
-
-//        static func == (lhs: TravelViewModel.State, rhs: TravelViewModel.State) -> Bool {
-//            switch (lhs, rhs) {
-//                case (.loading, .loading): true
-//                case (.loaded, .loaded): true
-//                case (.error(let lhsError), .error(let rhsError)): lhsError == rhsError
-//                default: false
-//            }
-//        }
+        case loading, loaded, none, error
     }
 }

@@ -12,17 +12,8 @@ struct RoutesListView: View {
     private let buttonTitle = "Уточнить время"
 
     @State var currentFilter = Filter()
+    @State private var isError: Bool = false
     @ObservedObject var viewModel: TravelViewModel
-
-    private var departure: String {
-        viewModel.destinations[.departure].city.title + " (" + viewModel.destinations[.departure].station.title + ") " +
-        viewModel.destinations[.departure].station.code + " "
-    }
-
-    private var arrival: String {
-        viewModel.destinations[.arrival].city.title + " (" + viewModel.destinations[.arrival].station.title + ") " +
-        viewModel.destinations[.arrival].station.code + " "
-    }
 
     private var filteredRoutes: [Route] {
         let complexRoutes = currentFilter.isWithTransfers
@@ -45,13 +36,19 @@ struct RoutesListView: View {
 
     var body: some View {
         VStack(spacing: .zero) {
-            (Text(departure) + Text(AppImages.Icons.arrow).baselineOffset(-1) + Text(arrival))
+            (Text(viewModel.departure) + Text(AppImages.Icons.arrow).baselineOffset(-1) + Text(viewModel.arrival))
                 .font(AppFonts.Bold.medium)
 
-            if viewModel.state != .loading && filteredRoutes.isEmpty {
+            if viewModel.state == .loading {
+                Spacer()
+                    .overlay {
+                        ProgressView()
+                            .progressViewStyle(CircularProgressViewStyle(tint: .ypBlackDuo))
+                    }
+            } else if viewModel.state == .none {
                 SearchResultEmptyView(notification: notification)
             } else {
-                ScrollView(.vertical) {
+                ScrollView(.vertical, showsIndicators: false) {
                     ForEach(filteredRoutes) { route in
                         if let carrier = viewModel.carriers.first(where: { $0.code == route.carrierCode }) {
                             NavigationLink {
@@ -63,29 +60,42 @@ struct RoutesListView: View {
                     }
                 }
                 .padding(.top, AppSizes.Spacing.large)
-            }
+                Spacer()
 
-            Spacer()
-
-            NavigationLink {
-                FilterView(filter: $currentFilter)
-            } label: {
-                HStack(alignment: .center, spacing: AppSizes.Spacing.xSmall) {
-                    ButtonTitleView(title: buttonTitle)
-                    MarkerView(currentFilter: currentFilter)
+                NavigationLink {
+                    FilterView(filter: $currentFilter)
+                } label: {
+                    HStack(alignment: .center, spacing: AppSizes.Spacing.xSmall) {
+                        ButtonTitleView(title: buttonTitle)
+                        MarkerView(currentFilter: currentFilter)
+                    }
+                    .setCustomButton(padding: .top)
                 }
-                .setCustomButton(padding: .top)
             }
         }
         .padding(.horizontal, AppSizes.Spacing.large)
         .setCustomNavigationBar()
+        .task {
+            do {
+                if viewModel.routes.isEmpty {
+                    try await viewModel.searchRoutes()
+                }
+            } catch {
+                isError = true
+            }
+        }
+        .sheet(isPresented: $isError, onDismiss: {
+            isError = false
+        }, content: {
+            ErrorView(errorType: viewModel.currentError)
+        })
     }
 }
 
 #Preview {
     NavigationStack {
         RoutesListView(
-            schedule: .constant(Schedule.sampleData), viewModel: TravelViewModel(networkService: NetworkService())
+            viewModel: TravelViewModel(networkService: NetworkService())
         )
     }
 }

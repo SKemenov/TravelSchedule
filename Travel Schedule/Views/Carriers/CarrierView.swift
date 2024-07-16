@@ -16,20 +16,30 @@ struct CarrierView: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: .zero) {
-            Image(carrier.logoName)
-                .resizable()
-                .scaledToFit()
-                .frame(maxWidth: .infinity, maxHeight: AppSizes.Height.carrierFullLogo)
-                .background(AppColors.Universal.white)
-                .clipShape(RoundedRectangle(cornerRadius: AppSizes.CornerRadius.xxLarge))
+            AsyncImage(url: URL(string: carrier.logoUrl)) { image in
+                image
+                    .resizable()
+                    .scaledToFit()
+                    .frame(maxWidth: .infinity, maxHeight: AppSizes.Height.carrierFullLogo)
+                    .background(AppColors.Universal.white)
+                    .clipShape(RoundedRectangle(cornerRadius: AppSizes.CornerRadius.xxLarge))
+            } placeholder: {
+                Image(systemName: carrier.placeholder)
+                    .renderingMode(.template)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(maxWidth: .infinity, maxHeight: AppSizes.Height.carrierFullLogo)
+                    .background(AppColors.Universal.white)
+                    .clipShape(RoundedRectangle(cornerRadius: AppSizes.CornerRadius.xxLarge))
+            }
             Text(carrierTitle)
                 .font(AppFonts.Bold.medium)
                 .frame(maxWidth: .infinity, maxHeight: AppSizes.Height.carrierTitle, alignment: .leading)
                 .padding(.vertical, AppSizes.Spacing.large)
 
             CarrierContactView(carrier: carrier, type: .email)
-
             CarrierContactView(carrier: carrier, type: .phone)
+            CarrierContactView(carrier: carrier, type: .contacts)
             Spacer()
         }
         .padding(.horizontal, AppSizes.Spacing.large)

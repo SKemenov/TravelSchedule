@@ -15,11 +15,20 @@ struct RouteCarrierView: View {
 
     var body: some View {
         HStack(spacing: AppSizes.Spacing.small) {
-            Image(carrier.logoName)
-                .resizable()
-                .scaledToFit()
-                .frame(width: AppSizes.Size.logo, height: AppSizes.Size.logo)
-                .padding(.leading, AppSizes.Spacing.medium)
+            AsyncImage(url: URL(string: carrier.logoUrl)) { image in
+                image
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: AppSizes.Size.logo, height: AppSizes.Size.logo)
+                    .padding(.leading, AppSizes.Spacing.medium)
+            } placeholder: {
+                Image(systemName: carrier.placeholder)
+                    .renderingMode(.template)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: AppSizes.Size.logo, height: AppSizes.Size.logo)
+                    .padding(.leading, AppSizes.Spacing.medium)
+            }
             HStack(spacing: .zero) {
                 VStack(alignment: .leading) {
                     Text(carrier.title)

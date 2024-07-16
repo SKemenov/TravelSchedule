@@ -9,37 +9,53 @@ import SwiftUI
 
 struct CarrierContactView: View {
     enum ContactType {
-        case email, phone
-    }
+        case email, phone, contacts
 
-    private let email = "E-mail"
-    private let phone = "Телефон"
+        var title: String {
+            switch self {
+                case .email: "E-mail"
+                case .phone: "Телефон"
+                case .contacts: "Контакты"
+            }
+        }
+    }
 
     let carrier: Carrier
     let type: ContactType
 
     @Environment(\.openURL) private var openURL
 
-    private var carrierEmail: String { "\(carrier.email)" }
-    private var carrierPhone: String { "\(carrier.phone)" }
     private var emailUrl: String { "mailto:" + carrier.email }
     private var phoneUrl: String { "tel:" + carrier.phone }
 
     var body: some View {
-        VStack(alignment: .leading, spacing: .zero) {
-            Text(type == .email ? email : phone)
-                .font(AppFonts.Regular.medium)
-                .foregroundStyle(AppColors.LightDark.black)
-            Button {
-                guard let url = URL(string: type == .email ? emailUrl : phoneUrl) else { return }
-                openURL(url)
-            } label: {
-                Text(type == .email ? carrierEmail : carrierPhone)
+        if type == .contacts {
+            VStack(alignment: .leading, spacing: .zero) {
+                Text(type.title)
+                    .font(AppFonts.Regular.medium)
+                    .foregroundStyle(AppColors.LightDark.black)
+                Text(carrier.contacts)
                     .font(AppFonts.Regular.small)
-                    .foregroundStyle(AppColors.Universal.blue)
+                    .foregroundStyle(AppColors.LightDark.black)
+                Spacer()
             }
+            .frame(height: AppSizes.Height.row * 2)
+        } else {
+            VStack(alignment: .leading, spacing: .zero) {
+                Text(type.title)
+                    .font(AppFonts.Regular.medium)
+                    .foregroundStyle(AppColors.LightDark.black)
+                Button {
+                    guard let url = URL(string: type == .email ? emailUrl : phoneUrl) else { return }
+                    openURL(url)
+                } label: {
+                    Text(type == .email ? carrier.email : carrier.phone)
+                        .font(AppFonts.Regular.small)
+                        .foregroundStyle(AppColors.Universal.blue)
+                }
+            }
+            .frame(height: AppSizes.Height.row)
         }
-        .frame(height: AppSizes.Height.row)
     }
 }
 
@@ -47,5 +63,6 @@ struct CarrierContactView: View {
     VStack {
         CarrierContactView(carrier: Carrier.sampleData[0], type: .email)
         CarrierContactView(carrier: Carrier.sampleData[0], type: .phone)
+        CarrierContactView(carrier: Carrier.sampleData[0], type: .contacts)
     }
 }
