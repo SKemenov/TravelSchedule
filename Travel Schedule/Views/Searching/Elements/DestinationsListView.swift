@@ -39,6 +39,7 @@ struct DestinationsListView: View {
                     }
                     .simultaneousGesture(TapGesture().onEnded {
                         viewModel.setDirection(to: index)
+                        viewModel.resetRoutes()
                     })
                 }
             }

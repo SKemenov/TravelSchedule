@@ -8,19 +8,25 @@
 import SwiftUI
 
 struct RootTabView: View {
-    @Binding var schedule: Schedule
+//    private let networkService: NetworkService
     @State var navPath: [ViewsRouter] = []
     @State var stories: [Story] = Story.mockData
+    @State private var isError: Bool = false
     @StateObject var viewModel = TravelViewModel(networkService: NetworkService())
+
+//    init() {
+//        do {
+//            networkService = try NetworkService()
+//        } catch {
+//            preconditionFailure("Cannot obtain server URL")
+//        }
+//        _viewModel = StateObject(wrappedValue: TravelViewModel(networkService: networkService))
+//    }
 
     var body: some View {
         NavigationStack(path: $navPath) {
             TabView {
-                SearchTabView(
-                    stories: $stories,
-                    navPath: $navPath,
-                    viewModel: viewModel
-                )
+                SearchTabView(stories: $stories, navPath: $navPath, viewModel: viewModel)
                     .tabItem {
                         AppImages.Tabs.schedule
                     }
@@ -30,28 +36,29 @@ struct RootTabView: View {
                     }
             }
             .task {
-                viewModel.fetchData()
+                do {
+                    try viewModel.fetchData()
+                } catch {
+                    isError = true
+                }
             }
+            .sheet(isPresented: $isError, onDismiss: {
+                isError = false
+            }, content: {
+                ErrorView(errorType: viewModel.currentError)
+            })
             .accentColor(AppColors.LightDark.black)
             .toolbar(.visible, for: .tabBar)
             .navigationDestination(for: ViewsRouter.self) { pathValue in
                 switch pathValue {
                     case .cityView:
-                        CityView(
-                            navPath: $navPath,
-                            viewModel: viewModel
-                        )
+                        CityView(navPath: $navPath, viewModel: viewModel)
                             .toolbar(.hidden, for: .tabBar)
                     case .stationView:
-                        StationView(
-                            navPath: $navPath,
-                            viewModel: viewModel
-                        )
+                        StationView(navPath: $navPath, viewModel: viewModel)
                             .toolbar(.hidden, for: .tabBar)
                     case .routeView:
-                        RoutesListView(
-                            viewModel: viewModel
-                        )
+                        RoutesListView(viewModel: viewModel)
                             .toolbar(.hidden, for: .tabBar)
                 }
             }
@@ -60,7 +67,6 @@ struct RootTabView: View {
 }
 
 #Preview {
-//    RootTabView(schedule: .constant(Schedule.sampleData))
     RootTabView()
         .environmentObject(SettingsViewModel(networkService: NetworkService()))
 }
