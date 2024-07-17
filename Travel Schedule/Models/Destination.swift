@@ -8,7 +8,7 @@
 import Foundation
 
 // MARK: - Struct
-struct Destination: Hashable, Identifiable {
+struct Destination: Hashable, Identifiable, Sendable {
     let id = UUID()
     var city: City
     var station: Station
@@ -16,7 +16,7 @@ struct Destination: Hashable, Identifiable {
 
 // MARK: - Mock data
 extension Destination {
-    static var emptyDestination = [
+    static let emptyDestination = [
         Destination(
             city: City(title: "", yandexCode: "", stationsCount: 0),
             station: Station(title: "", type: "", code: "", latitude: 0, longitude: 0)

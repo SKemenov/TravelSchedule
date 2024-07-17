@@ -9,7 +9,7 @@ import Foundation
 import OpenAPIURLSession
 
 
-final class NetworkService {
+actor NetworkService: Sendable {
     let serverURL: URL
     let client: Client
 

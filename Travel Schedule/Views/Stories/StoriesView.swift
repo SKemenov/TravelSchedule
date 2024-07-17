@@ -99,6 +99,7 @@ private extension StoriesView {
         }
     }
 
+    @MainActor
     func didTapStoryPage(at location: CGPoint) {
         let halfScreen = UIScreen.main.bounds.width / 2
         switch (currentPage, location.x) {

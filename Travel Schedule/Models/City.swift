@@ -8,7 +8,7 @@
 import Foundation
 
 // MARK: - Struct
-struct City: Hashable, Identifiable {
+struct City: Hashable, Identifiable, Sendable {
     let id = UUID()
     let title: String
     let yandexCode: String

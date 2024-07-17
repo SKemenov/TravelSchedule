@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Route: Hashable, Identifiable {
+struct Route: Hashable, Identifiable, Sendable {
     let id = UUID()
     let code: String
     let date: String

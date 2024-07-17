@@ -15,7 +15,7 @@ protocol SchedulesServiceProtocol {
     func getSchedules(station: String, date: String?) async throws -> Schedules
 }
 
-final class SchedulesService: SchedulesServiceProtocol {
+actor SchedulesService: SchedulesServiceProtocol, Sendable {
     private let client: Client
 
     init(client: Client) {

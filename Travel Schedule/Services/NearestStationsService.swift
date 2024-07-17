@@ -15,7 +15,7 @@ protocol NearestStationsServiceProtocol {
     func getNearestStations(lat: Double, lng: Double, distance: Double) async throws -> NearestStations
 }
 
-final class NearestStationsService: NearestStationsServiceProtocol {
+actor NearestStationsService: NearestStationsServiceProtocol, Sendable {
     private let client: Client
 
     init(client: Client) {

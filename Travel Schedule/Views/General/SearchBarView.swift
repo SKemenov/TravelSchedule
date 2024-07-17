@@ -62,6 +62,7 @@ private extension SearchBarView {
             .autocapitalization(.none)
     }
 
+    @MainActor
     func cancelSearching() {
         searchText = String()
         UIApplication.shared.sendAction(

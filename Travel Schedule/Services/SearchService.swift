@@ -15,7 +15,7 @@ protocol SearchServiceProtocol {
     func getSearches(from: String, to: String, with transfers: Bool) async throws -> Searches
 }
 
-final class SearchService: SearchServiceProtocol {
+actor SearchService: SearchServiceProtocol, Sendable {
     private let client: Client
 
     init(client: Client) {

@@ -15,7 +15,7 @@ protocol ThreadServiceProtocol {
     func getThread(uid: String) async throws -> Threads
 }
 
-final class ThreadService: ThreadServiceProtocol {
+actor ThreadService: ThreadServiceProtocol, Sendable {
     private let client: Client
 
     init(client: Client) {
