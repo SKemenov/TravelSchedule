@@ -98,27 +98,15 @@ final class TravelViewModel: ObservableObject {
         Task {
             state = .loading
             var convertedStations: [Station] = []
-            var type: Set<String> = []
             store.forEach {
                 if $0.codes?.yandex_code == city.yandexCode {
                     $0.stations?.forEach { settlementStation in
                         guard let station = convert(from: settlementStation) else { return }
-                        type.insert(station.type)
                         convertedStations.append(station)
                     }
                 }
             }
-            let sortedStations = convertedStations.sorted { $0.title < $1.title }
-            var customSortedStations = sortedStations.filter { $0.type == "airport" }
-            customSortedStations += sortedStations.filter { $0.type == "train_station" }
-            customSortedStations += sortedStations.filter { $0.type == "marine_station" }
-            customSortedStations += sortedStations.filter { $0.type == "river_port" }
-            customSortedStations += sortedStations.filter { $0.type == "bus_station" }
-            customSortedStations += sortedStations.filter {
-                $0.type != "airport" && $0.type != "train_station" && $0.type != "marine_station"
-                && $0.type != "river_port" && $0.type != "bus_station"
-            }
-            stations = customSortedStations
+            stations = sortByType(for: convertedStations)
             state = .loaded
         }
     }
@@ -190,6 +178,17 @@ final class TravelViewModel: ObservableObject {
 }
 
 private extension TravelViewModel {
+    func sortByType(for stations: [Station]) -> [Station] {
+        let sortedStations = stations.sorted { $0.title < $1.title }
+        var customSortedStations = sortedStations.filter { $0.type == "airport" }
+        customSortedStations += sortedStations.filter { $0.type == "train_station" }
+        customSortedStations += sortedStations.filter { $0.type == "marine_station" }
+        customSortedStations += sortedStations.filter { $0.type == "river_port" }
+        customSortedStations += sortedStations.filter { $0.type == "bus_station" }
+        let otherSortedStations = sortedStations.difference(from: customSortedStations)
+        return [customSortedStations, otherSortedStations].flatMap { $0 }
+    }
+
     func convert(from carrier: Components.Schemas.Carrier, for type: String) {
         var placeholder = String()
         switch type {

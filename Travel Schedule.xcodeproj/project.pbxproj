@@ -74,6 +74,7 @@
 		E9A49C3C2BD2B5D200017734 /* CityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9A49C3B2BD2B5D200017734 /* CityView.swift */; };
 		E9A49C402BD2B83800017734 /* StationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9A49C3F2BD2B83800017734 /* StationView.swift */; };
 		E9A49C432BD2CC0300017734 /* RouteView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9A49C422BD2CC0300017734 /* RouteView.swift */; };
+		E9B33EA52C47971500378815 /* Array+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9B33EA42C47971500378815 /* Array+Extensions.swift */; };
 		E9B4EE222C0E265B00E275C8 /* ButtonTitleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9B4EE212C0E265B00E275C8 /* ButtonTitleView.swift */; };
 		E9DCFF382BD8E3DB00C20F64 /* FilterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9DCFF372BD8E3DB00C20F64 /* FilterView.swift */; };
 		E9DCFF3B2BD8E40200C20F64 /* CarrierView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9DCFF3A2BD8E40200C20F64 /* CarrierView.swift */; };
@@ -167,6 +168,7 @@
 		E9A49C3B2BD2B5D200017734 /* CityView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CityView.swift; sourceTree = "<group>"; };
 		E9A49C3F2BD2B83800017734 /* StationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StationView.swift; sourceTree = "<group>"; };
 		E9A49C422BD2CC0300017734 /* RouteView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteView.swift; sourceTree = "<group>"; };
+		E9B33EA42C47971500378815 /* Array+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+Extensions.swift"; sourceTree = "<group>"; };
 		E9B4EE212C0E265B00E275C8 /* ButtonTitleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonTitleView.swift; sourceTree = "<group>"; };
 		E9DCFF372BD8E3DB00C20F64 /* FilterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterView.swift; sourceTree = "<group>"; };
 		E9DCFF3A2BD8E40200C20F64 /* CarrierView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CarrierView.swift; sourceTree = "<group>"; };
@@ -210,6 +212,7 @@
 				E99D5D872C1223CB00ED5184 /* Double+Extensions.swift */,
 				E90DA02F2C161063006E96B2 /* Binding+Extensions.swift */,
 				E9F443A02C47258400459138 /* String+Extensions.swift */,
+				E9B33EA42C47971500378815 /* Array+Extensions.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -645,6 +648,7 @@
 				E9396E602BDA3477003D69DA /* WebView.swift in Sources */,
 				E99D97452C0E384B0096E31D /* SetCustomButton.swift in Sources */,
 				E9A49C312BD2A1F700017734 /* Station.swift in Sources */,
+				E9B33EA52C47971500378815 /* Array+Extensions.swift in Sources */,
 				E9950E0F2C0DE6F500EDC6D0 /* RouteCarrierView.swift in Sources */,
 				E98703732C0E3690006495B8 /* FilterConnectionSectionView.swift in Sources */,
 				E9EC1BF82C0CB5D400FC85ED /* AppColors.swift in Sources */,
