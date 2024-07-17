@@ -5,11 +5,15 @@
 //  Created by Sergey Kemenov on 28.06.2024.
 //
 
-import Foundation
+import SwiftUI
 
 @MainActor
 final class SettingsViewModel: ObservableObject {
-    @Published var darkMode = false
+    @AppStorage("DarkMode") var darkMode: Bool = false {
+        willSet {
+            objectWillChange.send()
+        }
+    }
     @Published var copyrightInfo = String()
 
     private let networkService: NetworkService
