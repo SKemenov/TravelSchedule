@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Filter: Hashable {
+struct Filter: Hashable, Sendable {
     var isWithTransfers = true
     var isAtNight = true
     var isMorning = true

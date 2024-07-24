@@ -8,18 +8,33 @@
 import Foundation
 
 // MARK: - Struct
-struct Destination: Hashable, Identifiable {
+struct Destination: Hashable, Identifiable, Sendable {
     let id = UUID()
-    var cityTitle: String = ""
-    var stationTitle: String = ""
+    var city: City
+    var station: Station
 }
 
 // MARK: - Mock data
 extension Destination {
-    static var emptyDestination = [Destination(), Destination()]
+    static let emptyDestination = [
+        Destination(
+            city: City(title: "", yandexCode: "", stationsCount: 0),
+            station: Station(title: "", type: "", code: "", latitude: 0, longitude: 0)
+        ),
+        Destination(
+            city: City(title: "", yandexCode: "", stationsCount: 0),
+            station: Station(title: "", type: "", code: "", latitude: 0, longitude: 0)
+        )
+    ]
 
     static let sampleData: [Destination] = [
-        Destination(cityTitle: "Москва", stationTitle: "Ярославский Вокзал"),
-        Destination(cityTitle: "Санкт-Петербург", stationTitle: "Балтийский вокзал")
+        Destination(
+            city: City(title: "Москва", yandexCode: "", stationsCount: 0),
+            station: Station(title: "Ярославский Вокзал", type: "", code: "", latitude: 0, longitude: 0)
+        ),
+        Destination(
+            city: City(title: "Санкт-Петербург", yandexCode: "", stationsCount: 0),
+            station: Station(title: "Балтийский вокзал", type: "", code: "", latitude: 0, longitude: 0)
+        )
     ]
 }

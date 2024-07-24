@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum ErrorType: Int, CaseIterable {
+enum ErrorType: Int, CaseIterable, Error {
     case serverError = 0
     case connectionError
 

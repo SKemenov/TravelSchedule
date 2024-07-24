@@ -8,45 +8,63 @@
 import SwiftUI
 
 struct StoryPageView: View {
-    // MARK: - Constants
-    private enum LineLimits {
-        static let title = 2
-        static let description = 3
-    }
-
     // MARK: - Properties
     var model: StoryPage
 
-    // MARK: - View
+    // MARK: - Body
     var body: some View {
         AppColors.Universal.black
             .ignoresSafeArea()
             .overlay {
                 ZStack {
-                    Image(model.imageName)
-                        .resizable()
-                        .scaledToFill()
-                        .clipShape(RoundedRectangle(cornerRadius: AppSizes.CornerRadius.Custom.story))
-                        .padding(.top, AppSizes.Spacing.xSmall)
-                        .padding(.horizontal, .zero)
-
-                    VStack(alignment: .leading, spacing: AppSizes.Spacing.medium) {
-                        Spacer()
-
-                        Text(model.title)
-                            .font(AppFonts.Bold.large)
-                            .lineLimit(LineLimits.title)
-
-                        Text(model.description)
-                            .font(AppFonts.Regular.large)
-                            .lineLimit(LineLimits.description)
-                    }
-                    .foregroundStyle(AppColors.Universal.white)
-                    .padding(.horizontal, AppSizes.Spacing.medium)
-                    .padding(.bottom, AppSizes.Spacing.Custom.story)
+                    fullImage
+                    information
                 }
                 .padding(.bottom, AppSizes.Spacing.large)
             }
+    }
+}
+
+// MARK: - Private views
+private extension StoryPageView {
+    var fullImage: some View {
+        Image(model.imageName)
+            .resizable()
+            .scaledToFill()
+            .clipShape(RoundedRectangle(cornerRadius: AppSizes.CornerRadius.Custom.story))
+            .padding(.top, AppSizes.Spacing.xSmall)
+            .padding(.horizontal, .zero)
+    }
+
+    var information: some View {
+        VStack(alignment: .leading, spacing: AppSizes.Spacing.medium) {
+            Spacer()
+            title
+            description
+        }
+        .foregroundStyle(AppColors.Universal.white)
+        .padding(.horizontal, AppSizes.Spacing.medium)
+        .padding(.bottom, AppSizes.Spacing.Custom.story)
+    }
+
+    var title: some View {
+        Text(model.title)
+            .font(AppFonts.Bold.large)
+            .lineLimit(LineLimits.title)
+    }
+
+    var description: some View {
+        Text(model.description)
+            .font(AppFonts.Regular.large)
+            .lineLimit(LineLimits.description)
+    }
+}
+
+// MARK: - Constants
+private extension StoryPageView {
+    enum LineLimits {
+        static let title = 2
+        static let description = 3
     }
 }
 

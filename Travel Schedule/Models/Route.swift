@@ -7,60 +7,66 @@
 
 import Foundation
 
-struct Route: Hashable, Identifiable {
+struct Route: Hashable, Identifiable, Sendable {
     let id = UUID()
+    let code: String
     let date: String
-    let departureTime: String
-    let arrivalTime: String
-    let durationTime: String
+    var departureTime: String
+    var arrivalTime: String
+    var durationTime: String
     let connectionStation: String
     var isDirect: Bool {
         connectionStation.isEmpty
     }
-    let carrierID: UUID
+    let carrierCode: Int
 }
 
 extension Route {
     static let sampleData: [Route] = [
         Route(
-            date: "14 января",
+            code: "020U_6_2",
+            date: "2024-01-14",
             departureTime: "22:30",
             arrivalTime: "08:15",
-            durationTime: "20",
+            durationTime: "20 часов",
             connectionStation: "Костроме",
-            carrierID: Carrier.sampleData[0].id
+            carrierCode: 129
         ),
         Route(
-            date: "15 января",
+            code: "020U_6_2",
+            date: "2024-01-15",
             departureTime: "01:15",
             arrivalTime: "09:00",
-            durationTime: "9",
+            durationTime: "9 часов",
             connectionStation: "",
-            carrierID: Carrier.sampleData[1].id
+            carrierCode: 129
         ),
         Route(
-            date: "16 января",
+            code: "020U_6_2",
+            date: "2024-01-16",
             departureTime: "12:30",
             arrivalTime: "21:00",
-            durationTime: "9",
+            durationTime: "9 часов",
             connectionStation: "",
-            carrierID: Carrier.sampleData[2].id
+            carrierCode: 129
         ),
         Route(
-            date: "17 января",
+            code: "020U_6_2",
+            date: "2024-01-17",
             departureTime: "22:30",
             arrivalTime: "08:15",
-            durationTime: "20",
+            durationTime: "20 часов",
             connectionStation: "Костроме",
-            carrierID: Carrier.sampleData[0].id
+            carrierCode: 129
         ),
         Route(
-            date: "17 января",
+            code: "020U_6_2",
+            date: "2024-01-17",
             departureTime: "18:00",
             arrivalTime: "01:00",
-            durationTime: "7",
+            durationTime: "7 часов",
             connectionStation: "",
-            carrierID: Carrier.sampleData[0].id
+            carrierCode: 129
         )
     ]
 }

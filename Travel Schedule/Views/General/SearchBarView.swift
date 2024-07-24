@@ -18,30 +18,47 @@ struct SearchBarView: View {
 
     // MARK: - Properties
     @Binding var searchText: String
-
     @Environment(\.colorScheme) var colorScheme
 
-// MARK: - View
+    // MARK: - View
     var body: some View {
         HStack(spacing: .zero) {
-            show(icon: AppImages.Icons.search)
-                .foregroundStyle(searchText.isEmpty ? AppColors.Universal.gray : AppColors.LightDark.black)
-
-            showTextField()
-
+            searchIcon
+            searchTextField
             if !searchText.isEmpty {
-                Button {
-                    cancelSearching()
-                } label: {
-                    show(icon: AppImages.Icons.cancel)
-                        .foregroundStyle(AppColors.Universal.gray)
-                }
+                cancelButton
             }
         }
         .frame(height: height)
         .background(colorScheme == .light ? AppColors.Universal.lightGray : AppColors.Universal.darkGray)
         .clipShape(RoundedRectangle(cornerRadius: cornerRadius))
         .padding(.horizontal, padding)
+    }
+}
+
+// MARK: - Private views
+private extension SearchBarView {
+    var searchIcon: some View {
+        show(icon: AppImages.Icons.search)
+            .foregroundStyle(searchText.isEmpty ? AppColors.Universal.gray : AppColors.LightDark.black)
+    }
+
+    var searchTextField: some View {
+        TextField(placeholder, text: $searchText)
+            .font(AppFonts.Regular.medium)
+            .foregroundStyle(AppColors.LightDark.black)
+            .autocorrectionDisabled(true)
+            .autocapitalization(.none)
+    }
+
+    @MainActor
+    var cancelButton: some View {
+        Button {
+            cancelSearching()
+        } label: {
+            show(icon: AppImages.Icons.cancel)
+                .foregroundStyle(AppColors.Universal.gray)
+        }
     }
 }
 
@@ -54,14 +71,7 @@ private extension SearchBarView {
             .padding(.horizontal, iconPadding)
     }
 
-    func showTextField() -> some View {
-        TextField(placeholder, text: $searchText)
-            .font(AppFonts.Regular.medium)
-            .foregroundStyle(AppColors.LightDark.black)
-            .autocorrectionDisabled(true)
-            .autocapitalization(.none)
-    }
-
+    @MainActor
     func cancelSearching() {
         searchText = String()
         UIApplication.shared.sendAction(

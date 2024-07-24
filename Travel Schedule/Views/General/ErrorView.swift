@@ -18,5 +18,5 @@ struct ErrorView: View {
 }
 
 #Preview {
-    ErrorView(errorType: ErrorType.serverError)
+    ErrorView(errorType: ErrorType.connectionError)
 }

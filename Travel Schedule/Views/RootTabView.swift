@@ -8,43 +8,106 @@
 import SwiftUI
 
 struct RootTabView: View {
-    @Binding var schedule: Schedule
-    @Binding var darkMode: Bool
-    @State var navPath: [ViewsRouter] = []
-    @State var direction: Int = .departure
-    @State var stories: [Story] = Story.mockData
+    // MARK: - Properties
+    @State private var isError: Bool = false
+    @StateObject var destinationsViewModel: SearchScreenViewModel
+    @StateObject var rootViewModel: RootViewModel
 
+    // MARK: - Body
     var body: some View {
-        NavigationStack(path: $navPath) {
+        NavigationStack(path: $rootViewModel.navPath) {
             TabView {
-                SearchTabView(stories: $stories, schedule: $schedule, navPath: $navPath, direction: $direction)
-                    .tabItem {
-                        AppImages.Tabs.schedule
-                    }
-                SettingsView(darkMode: $darkMode)
-                    .tabItem {
-                        AppImages.Tabs.settings
-                    }
+                searchScreenTab
+                settingsScreenTab
             }
+            .task {
+                do {
+                    try rootViewModel.fetchData()
+                } catch {
+                    isError = true
+                }
+            }
+            .sheet(isPresented: $isError, onDismiss: {
+                isError = false
+            }, content: {
+                errorView
+            })
             .accentColor(AppColors.LightDark.black)
             .toolbar(.visible, for: .tabBar)
             .navigationDestination(for: ViewsRouter.self) { pathValue in
                 switch pathValue {
-                    case .cityView:
-                        CityView(schedule: $schedule, navPath: $navPath, direction: $direction)
-                            .toolbar(.hidden, for: .tabBar)
-                    case .stationView:
-                        StationView(schedule: $schedule, navPath: $navPath, direction: $direction)
-                            .toolbar(.hidden, for: .tabBar)
-                    case .routeView:
-                        RoutesListView(schedule: $schedule)
-                            .toolbar(.hidden, for: .tabBar)
+                    case .cityView: citiesScreen
+                    case .stationView: stationsScreen
+                    case .routeView: routesScreen
                 }
             }
         }
     }
 }
 
+// MARK: - Private Views
+private extension RootTabView {
+    var searchScreenTab: some View {
+        SearchScreen(
+            navPath: $rootViewModel.navPath,
+            rootViewModel: rootViewModel,
+            viewModel: destinationsViewModel
+        )
+        .tabItem {
+            AppImages.Tabs.schedule
+        }
+    }
+
+    var settingsScreenTab: some View {
+        SettingsScreen()
+            .tabItem {
+                AppImages.Tabs.settings
+            }
+    }
+
+    var errorView: some View {
+        ErrorView(errorType: rootViewModel.currentError)
+    }
+
+    var citiesScreen: some View {
+        CityScreen(
+            navPath: $rootViewModel.navPath,
+            destinationsViewModel: destinationsViewModel,
+            viewModel: CityScreenViewModel(store: rootViewModel.store)
+        )
+        .toolbar(.hidden, for: .tabBar)
+    }
+
+    var stationsScreen: some View {
+        StationScreen(
+            navPath: $rootViewModel.navPath,
+            destinationsViewModel: destinationsViewModel,
+            viewModel: StationScreenViewModel(
+                store: rootViewModel.store,
+                city: destinationsViewModel.destinations[
+                    destinationsViewModel.direction
+                ].city
+            )
+        )
+        .toolbar(.hidden, for: .tabBar)
+    }
+
+    var routesScreen: some View {
+        RoutesScreen(
+            viewModel: RoutesScreenViewModel(
+                destinations: destinationsViewModel.destinations,
+                routesDownloader: rootViewModel.routesDownloader,
+                imageDownloader: rootViewModel.imageDownloader
+            )
+        )
+        .toolbar(.hidden, for: .tabBar)
+    }
+}
+
 #Preview {
-    RootTabView(schedule: .constant(Schedule.sampleData), darkMode: .constant(false))
+    RootTabView(
+        destinationsViewModel: SearchScreenViewModel(),
+        rootViewModel: RootViewModel(networkService: NetworkService())
+    )
+        .environmentObject(SettingsViewModel(networkService: NetworkService()))
 }
