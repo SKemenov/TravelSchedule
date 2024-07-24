@@ -1,5 +1,5 @@
 //
-//  SearchTabView.swift
+//  SearchScreen.swift
 //  Travel Schedule
 //
 //  Created by Sergey Kemenov on 25.04.2024.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct SearchTabView: View {
+struct SearchScreen: View {
     @Binding var navPath: [ViewsRouter]
     @ObservedObject var rootViewModel: RootViewModel
     @ObservedObject var viewModel: SearchScreenViewModel
@@ -27,7 +27,7 @@ struct SearchTabView: View {
 
 #Preview {
     NavigationStack {
-        SearchTabView(
+        SearchScreen(
             navPath: .constant([]),
             rootViewModel: RootViewModel(networkService: NetworkService()),
             viewModel: SearchScreenViewModel()

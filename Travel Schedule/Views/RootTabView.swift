@@ -48,7 +48,7 @@ struct RootTabView: View {
 // MARK: - Private Views
 private extension RootTabView {
     var searchScreenTab: some View {
-        SearchTabView(
+        SearchScreen(
             navPath: $rootViewModel.navPath,
             rootViewModel: rootViewModel,
             viewModel: destinationsViewModel
@@ -59,7 +59,7 @@ private extension RootTabView {
     }
 
     var settingsScreenTab: some View {
-        SettingsView()
+        SettingsScreen()
             .tabItem {
                 AppImages.Tabs.settings
             }
@@ -93,7 +93,7 @@ private extension RootTabView {
     }
 
     var routesScreen: some View {
-        RoutesListView(
+        RoutesScreen(
             viewModel: RoutesScreenViewModel(
                 destinations: destinationsViewModel.destinations,
                 routesDownloader: rootViewModel.routesDownloader,

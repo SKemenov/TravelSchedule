@@ -1,5 +1,5 @@
 //
-//  SettingsView.swift
+//  SettingsScreen.swift
 //  Travel Schedule
 //
 //  Created by Sergey Kemenov on 19.04.2024.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct SettingsView: View {
+struct SettingsScreen: View {
     @EnvironmentObject var viewModel: SettingsViewModel
 
     var body: some View {
@@ -22,7 +22,7 @@ struct SettingsView: View {
     }
 }
 
-private extension SettingsView {
+private extension SettingsScreen {
     enum Titles {
         static let darkMode = "Тёмная тема"
         static let agreement = "Пользовательское соглашение"
@@ -56,7 +56,7 @@ private extension SettingsView {
 
 #Preview {
     NavigationStack {
-        SettingsView()
+        SettingsScreen()
             .environmentObject(SettingsViewModel(networkService: NetworkService()))
     }
 }

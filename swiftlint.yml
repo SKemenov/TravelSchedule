@@ -24,6 +24,7 @@ analyzer_rules:
   - unused_declaration
 
 opt_in_rules:
+  - attributes
   - array_init
   - closure_end_indentation
   - closure_spacing
@@ -95,10 +96,12 @@ attributes:
     - "@NSManaged"
     - "@objc"
     - "@Environment"
+    - "@AppStorage"
   always_on_line_above:
     - "@ConfigurationElement"
     - "@OptionGroup"
     - "@RuleConfigurationDescriptionBuilder"
+    - "@MainActor"
 
 large_tuple: 3
 number_separator:

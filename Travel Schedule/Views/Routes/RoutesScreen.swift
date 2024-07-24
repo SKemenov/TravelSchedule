@@ -1,5 +1,5 @@
 //
-//  RoutesListView.swift
+//  RoutesScreen.swift
 //  Travel Schedule
 //
 //  Created by Sergey Kemenov on 23.04.2024.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct RoutesListView: View {
+struct RoutesScreen: View {
     // MARK: - Properties
     @State private var isError: Bool = false
     @ObservedObject var viewModel: RoutesScreenViewModel
@@ -39,7 +39,7 @@ struct RoutesListView: View {
 }
 
 // MARK: - Private views
-private extension RoutesListView {
+private extension RoutesScreen {
     var titleView: some View {
         VStack(alignment: .leading, spacing: .zero) {
             (Text(viewModel.departure) + Text(AppImages.Icons.arrow).baselineOffset(-1) + Text(viewModel.arrival))
@@ -110,7 +110,7 @@ private extension RoutesListView {
 }
 
 // MARK: - Private methods
-private extension RoutesListView {
+private extension RoutesScreen {
     func fetchData() async {
         do {
             if viewModel.routes.isEmpty {
@@ -124,7 +124,7 @@ private extension RoutesListView {
 
 #Preview {
     NavigationStack {
-        RoutesListView(
+        RoutesScreen(
             viewModel: RoutesScreenViewModel(
                 destinations: Destination.sampleData,
                 routes: Route.sampleData,
