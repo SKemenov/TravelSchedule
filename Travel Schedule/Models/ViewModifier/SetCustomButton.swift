@@ -13,6 +13,7 @@ struct SetCustomButton: ViewModifier {
 
     func body(content: Content) -> some View {
         content
+            .font(AppFonts.Bold.small)
             .foregroundStyle(AppColors.Universal.white)
             .frame(maxHeight: AppSizes.Height.searchButton)
             .frame(maxWidth: (width != nil) ? width : .infinity)

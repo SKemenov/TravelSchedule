@@ -25,7 +25,7 @@ extension Route {
     static let sampleData: [Route] = [
         Route(
             code: "020U_6_2",
-            date: "14 января",
+            date: "2024-01-14",
             departureTime: "22:30",
             arrivalTime: "08:15",
             durationTime: "20 часов",
@@ -34,7 +34,7 @@ extension Route {
         ),
         Route(
             code: "020U_6_2",
-            date: "15 января",
+            date: "2024-01-15",
             departureTime: "01:15",
             arrivalTime: "09:00",
             durationTime: "9 часов",
@@ -43,7 +43,7 @@ extension Route {
         ),
         Route(
             code: "020U_6_2",
-            date: "16 января",
+            date: "2024-01-16",
             departureTime: "12:30",
             arrivalTime: "21:00",
             durationTime: "9 часов",
@@ -52,7 +52,7 @@ extension Route {
         ),
         Route(
             code: "020U_6_2",
-            date: "17 января",
+            date: "2024-01-17",
             departureTime: "22:30",
             arrivalTime: "08:15",
             durationTime: "20 часов",
@@ -61,7 +61,7 @@ extension Route {
         ),
         Route(
             code: "020U_6_2",
-            date: "17 января",
+            date: "2024-01-17",
             departureTime: "18:00",
             arrivalTime: "01:00",
             durationTime: "7 часов",

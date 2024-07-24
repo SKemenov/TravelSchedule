@@ -24,6 +24,8 @@ struct SetCustomNavBackButton: ViewModifier {
                             .imageScale(.large)
                             .foregroundStyle(AppColors.LightDark.black)
                     }
+                    .padding(.leading, -AppSizes.Spacing.xSmall)
+                    .padding(.trailing, AppSizes.Spacing.xSmall)
                 }
             }
             .contentShape(Rectangle()) // Start of the gesture to dismiss the navigation

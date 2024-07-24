@@ -12,6 +12,7 @@ struct Carrier: Hashable, Identifiable, Sendable {
     let code: Int
     let title: String
     let logoUrl: String
+    let logoSVGUrl: String
     let placeholder: String
     let email: String
     let phone: String
@@ -24,6 +25,7 @@ extension Carrier {
             code: 129,
             title: "РЖД",
             logoUrl: "rzhd",
+            logoSVGUrl: "rzhd",
             placeholder: "airplane",
             email: "i.lozgkina@yandex.ru",
             phone: "+7 (904) 329-27-71",
@@ -33,6 +35,7 @@ extension Carrier {
             code: 8565,
             title: "ФГК",
             logoUrl: "fgk",
+            logoSVGUrl: "fgk",
             placeholder: "cablecar",
             email: "i.lozgkina@yandex.ru",
             phone: "+7 (904) 329-27-71",
@@ -42,6 +45,7 @@ extension Carrier {
             code: 26,
             title: "Урал логистика",
             logoUrl: "ural",
+            logoSVGUrl: "ural",
             placeholder: "ferry",
             email: "i.lozgkina@yandex.ru",
             phone: "+7 (904) 329-27-71",
