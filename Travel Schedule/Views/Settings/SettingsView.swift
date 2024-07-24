@@ -8,36 +8,49 @@
 import SwiftUI
 
 struct SettingsView: View {
-    private enum Titles {
+    @EnvironmentObject var viewModel: SettingsViewModel
+
+    var body: some View {
+        VStack(spacing: .zero) {
+            switchView
+            agreementView
+            Spacer()
+            footerView
+        }
+        .padding(.vertical, AppSizes.Spacing.xxLarge)
+        .foregroundStyle(AppColors.LightDark.black)
+    }
+}
+
+private extension SettingsView {
+    enum Titles {
         static let darkMode = "Тёмная тема"
         static let agreement = "Пользовательское соглашение"
         static let version = "Версия \(Bundle.main.appVersionLong).\(Bundle.main.appBuild)"
     }
-    @EnvironmentObject var settings: SettingsViewModel
 
-    var body: some View {
-        VStack(spacing: .zero) {
-            Toggle(Titles.darkMode, isOn: $settings.darkMode)
-                .setRowElement()
-                .tint(AppColors.Universal.blue)
-            NavigationLink {
-                AgreementView()
-            } label: {
-                RowSearchView(rowString: Titles.agreement)
-            }
+    var switchView: some View {
+        Toggle(Titles.darkMode, isOn: $viewModel.darkMode)
             .setRowElement()
+            .tint(AppColors.Universal.blue)
+    }
 
-            Spacer()
-
-            VStack(alignment: .center, spacing: AppSizes.Spacing.large) {
-                Text(settings.copyrightInfo)
-                Text(Titles.version)
-            }
-            .font(AppFonts.Regular.small)
-            .frame(minHeight: AppSizes.Height.about)
+    var agreementView: some View {
+        NavigationLink {
+            AgreementView()
+        } label: {
+            RowView(title: Titles.agreement)
         }
-        .padding(.vertical, AppSizes.Spacing.xxLarge)
-        .foregroundStyle(AppColors.LightDark.black)
+        .setRowElement()
+    }
+
+    var footerView: some View {
+        VStack(alignment: .center, spacing: AppSizes.Spacing.large) {
+            Text(viewModel.copyrightInfo)
+            Text(Titles.version)
+        }
+        .font(AppFonts.Regular.small)
+        .frame(minHeight: AppSizes.Height.about)
     }
 }
 

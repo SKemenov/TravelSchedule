@@ -8,66 +8,82 @@
 import SwiftUI
 
 struct StationView: View {
-    private let title = "Выбор станции"
-    private let notification = "Станция не найдена"
-
+    // MARK: - Properties
     @Binding var navPath: [ViewsRouter]
-    @ObservedObject var viewModel: TravelViewModel
+    @ObservedObject var destinationsViewModel: SearchScreenViewModel
+    @ObservedObject var viewModel: StationScreenViewModel
 
-    @State private var searchString = String()
-
-    private var searchingResults: [Station] {
-        searchString.isEmpty
-            ? viewModel.stations
-            : viewModel.stations.filter { $0.title.lowercased().contains(searchString.lowercased()) }
-    }
-
+    // MARK: - Body
     var body: some View {
         VStack(spacing: .zero) {
-            SearchBarView(searchText: $searchString)
-            if searchingResults.isEmpty {
-                SearchResultEmptyView(notification: notification)
+            searchBar
+            if viewModel.filteredStations.isEmpty {
+                emptyView
             } else {
-                ScrollView(.vertical, showsIndicators: false) {
-                    LazyVStack(spacing: .zero) {
-                        ForEach(searchingResults) { station in
-                            Button {
-                                saveSelected(station: station)
-                            } label: {
-                                RowSearchView(rowString: station.title)
-                            }
-                            .setRowElement()
-                            .padding(.vertical, AppSizes.Spacing.large)
-                        }
-                    }
-                    .padding(.vertical, AppSizes.Spacing.large)
-                }
+                stationsList
             }
             Spacer()
         }
-        .setCustomNavigationBar(title: title)
+        .setCustomNavigationBar(title: viewModel.title)
         .foregroundStyle(AppColors.LightDark.black)
         .task {
-            searchString = String()
-            viewModel.fetchStations(for: viewModel.destinations[viewModel.direction].city)
+            fetchData()
         }
         .overlay {
             if viewModel.state == .loading {
-                ProgressView()
-                    .progressViewStyle(CircularProgressViewStyle(tint: .ypBlackDuo))
+                progressView
             }
         }
     }
 }
 
+// MARK: - Private views
+private extension StationView {
+    var searchBar: some View {
+        SearchBarView(searchText: $viewModel.searchString)
+    }
+
+    var emptyView: some View {
+        SearchResultEmptyView(notification: viewModel.notification)
+    }
+
+    var stationsList: some View {
+        ScrollView(.vertical, showsIndicators: false) {
+            LazyVStack(spacing: .zero) {
+                ForEach(viewModel.filteredStations) { station in
+                    Button {
+                        saveSelected(station: station)
+                    } label: {
+                        RowView(title: station.title)
+                    }
+                    .setRowElement()
+                    .padding(.vertical, AppSizes.Spacing.large)
+                }
+            }
+            .padding(.vertical, AppSizes.Spacing.large)
+        }
+    }
+
+    var progressView: some View {
+        ProgressView()
+            .progressViewStyle(CircularProgressViewStyle(tint: .ypBlackDuo))
+    }
+}
+
+// MARK: - Private methods
 private extension StationView {
     func saveSelected(station: Station) {
-        viewModel.saveSelected(station: station)
+        destinationsViewModel.saveSelected(station: station)
         returnToRoot()
     }
 
     func returnToRoot() {
         navPath.removeAll()
+    }
+
+    func fetchData() {
+        viewModel.searchString = String()
+        viewModel.fetchStations()
     }
 }
 
@@ -75,7 +91,8 @@ private extension StationView {
     NavigationStack {
         StationView(
             navPath: .constant([]),
-            viewModel: TravelViewModel(networkService: NetworkService())
+            destinationsViewModel: SearchScreenViewModel(destinations: Destination.sampleData),
+            viewModel: StationScreenViewModel(store: [], city: City.sampleData[0])
         )
     }
 }

@@ -9,42 +9,82 @@ import SwiftUI
 
 struct FilterView: View {
     // MARK: - Constants
+    private let timeSectionTitle = "Время отправления"
+    private let connectionSectionTitle = "Показывать варианты с пересадками"
     private let buttonTitle = "Применить"
 
     // MARK: - Properties
-    @Binding var filter: Filter
-
+    @Binding var viewModelFilter: Filter
     @State var currentFilter = Filter()
 
     @Environment(\.presentationMode) var presentationMode
 
+    // MARK: - Body
     var body: some View {
         VStack(alignment: .leading, spacing: .zero) {
-            FilterTimeSectionView(currentFilter: $currentFilter)
-
-            FilterConnectionSectionView(currentFilter: $currentFilter)
-
+            timeSectionView
+            connectionSectionView
             Spacer()
-
-            if currentFilter != filter {
-                Button {
-                    filter = currentFilter
-                    self.presentationMode.wrappedValue.dismiss()
-                } label: {
-                    ButtonTitleView(title: buttonTitle)
-                }
-                .setCustomButton(padding: .horizontal)
+            if currentFilter != viewModelFilter {
+                buttonView
             }
         }
         .setCustomNavigationBar()
         .onAppear {
-            currentFilter = filter
+            loadFilter()
         }
+    }
+}
+
+// MARK: - Private views
+private extension FilterView {
+    var timeSectionView: some View {
+        VStack(alignment: .leading, spacing: .zero) {
+            show(title: timeSectionTitle)
+            CheckboxView(type: .morning, isOn: $currentFilter.isMorning)
+            CheckboxView(type: .afternoon, isOn: $currentFilter.isAfternoon)
+            CheckboxView(type: .evening, isOn: $currentFilter.isEvening)
+            CheckboxView(type: .night, isOn: $currentFilter.isAtNight)
+        }
+    }
+
+    var connectionSectionView: some View {
+        VStack(alignment: .leading, spacing: .zero) {
+            show(title: connectionSectionTitle)
+            RadioButtonView(isOn: $currentFilter.isWithTransfers)
+        }
+    }
+
+    var buttonView: some View {
+        Button {
+            saveFilter()
+            self.presentationMode.wrappedValue.dismiss()
+        } label: {
+            Text(buttonTitle)
+                .setCustomButton(padding: .horizontal)
+        }
+    }
+}
+
+// MARK: - Private methods
+private extension FilterView {
+    func show(title: String) -> some View {
+        Text(title)
+            .font(AppFonts.Bold.medium)
+            .padding(AppSizes.Spacing.large)
+    }
+
+    func loadFilter() {
+        currentFilter = viewModelFilter
+    }
+
+    func saveFilter() {
+        viewModelFilter = currentFilter
     }
 }
 
 #Preview {
     NavigationStack {
-        FilterView(filter: .constant(Filter.fullSearch))
+        FilterView(viewModelFilter: .constant(Filter.customSearch))
     }
 }

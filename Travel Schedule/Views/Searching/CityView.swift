@@ -8,50 +8,57 @@
 import SwiftUI
 
 struct CityView: View {
-    private let title = "Выбор города"
-    private let notification = "Город не найден"
-
     @Binding var navPath: [ViewsRouter]
-    @ObservedObject var viewModel: TravelViewModel
-
-    @State private var searchString = String()
-
-    private var searchingResults: [City] {
-        searchString.isEmpty
-            ? viewModel.cities
-            : viewModel.cities.filter { $0.title.lowercased().contains(searchString.lowercased()) }
-    }
+    @ObservedObject var destinationsViewModel: SearchScreenViewModel
+    @ObservedObject var viewModel: CityScreenViewModel
 
     var body: some View {
         VStack(spacing: .zero) {
-            SearchBarView(searchText: $searchString)
-            if searchingResults.isEmpty {
-                SearchResultEmptyView(notification: notification)
+            SearchBarView(searchText: $viewModel.searchString)
+            if viewModel.filteredCities.isEmpty {
+                emptyView
             } else {
-                ScrollView(.vertical, showsIndicators: false) {
-                    LazyVStack(spacing: .zero) {
-                        ForEach(searchingResults) { city in
-                            NavigationLink(value: ViewsRouter.stationView) {
-                                RowSearchView(rowString: city.title)
-                            }
-                            .simultaneousGesture(TapGesture().onEnded {
-                                viewModel.saveSelected(city: city)
-                            })
-                            .setRowElement()
-                            .padding(.vertical, AppSizes.Spacing.large)
-                        }
-                    }
-                }
-                .padding(.vertical, AppSizes.Spacing.large)
+                listView
             }
             Spacer()
         }
-        .setCustomNavigationBar(title: title)
+        .setCustomNavigationBar(title: viewModel.title)
         .foregroundStyle(AppColors.LightDark.black)
         .task {
-            searchString = String()
+            viewModel.searchString = String()
             viewModel.fetchCities()
         }
+        .overlay {
+            if viewModel.state == .loading {
+                ProgressView()
+                    .progressViewStyle(CircularProgressViewStyle(tint: .ypBlackDuo))
+            }
+        }
+    }
+}
+
+private extension CityView {
+    var emptyView: some View {
+        SearchResultEmptyView(notification: viewModel.notification)
+    }
+
+    var listView: some View {
+        ScrollView(.vertical, showsIndicators: false) {
+            LazyVStack(spacing: .zero) {
+                ForEach(viewModel.filteredCities) { city in
+                    NavigationLink(value: ViewsRouter.stationView) {
+                        RowView(title: city.title)
+                    }
+                    .simultaneousGesture(
+                        TapGesture()
+                            .onEnded { destinationsViewModel.saveSelected(city: city) }
+                    )
+                    .setRowElement()
+                    .padding(.vertical, AppSizes.Spacing.large)
+                }
+            }
+        }
+        .padding(.vertical, AppSizes.Spacing.large)
     }
 }
 
@@ -59,7 +66,8 @@ struct CityView: View {
     NavigationStack {
         CityView(
             navPath: .constant([]),
-            viewModel: TravelViewModel(networkService: NetworkService())
+            destinationsViewModel: SearchScreenViewModel(destinations: Destination.sampleData),
+            viewModel: CityScreenViewModel(store: [])
         )
     }
 }

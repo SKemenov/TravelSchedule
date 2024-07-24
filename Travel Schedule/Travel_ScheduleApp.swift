@@ -13,7 +13,10 @@ struct Travel_ScheduleApp: App {
 
     var body: some Scene {
         WindowGroup {
-            RootTabView()
+            RootTabView(
+                destinationsViewModel: SearchScreenViewModel(),
+                rootViewModel: RootViewModel(networkService: NetworkService())
+            )
                 .environmentObject(settings)
                 .environment(\.colorScheme, settings.darkMode ? .dark : .light)
         }

@@ -1,5 +1,5 @@
 //
-//  RowSearchView.swift
+//  RowView.swift
 //  Travel Schedule
 //
 //  Created by Sergey Kemenov on 22.04.2024.
@@ -7,12 +7,12 @@
 
 import SwiftUI
 
-struct RowSearchView: View {
-    @State var rowString: String
+struct RowView: View {
+    @State var title: String
 
     var body: some View {
         HStack(spacing: .zero) {
-            Text(rowString)
+            Text(title)
                 .font(AppFonts.Regular.medium)
             Spacer()
             AppImages.Icons.forward
@@ -22,5 +22,5 @@ struct RowSearchView: View {
 }
 
 #Preview {
-    RowSearchView(rowString: "Moscow")
+    RowView(title: "Moscow")
 }

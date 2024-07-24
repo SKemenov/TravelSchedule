@@ -8,81 +8,27 @@
 import SwiftUI
 
 struct RoutesListView: View {
-    private let notification = "Вариантов нет"
-    private let buttonTitle = "Уточнить время"
-
-    @State var currentFilter = Filter()
+    // MARK: - Properties
     @State private var isError: Bool = false
-    @ObservedObject var viewModel: TravelViewModel
+    @ObservedObject var viewModel: RoutesScreenViewModel
 
-    private var filteredRoutes: [Route] {
-        let complexRoutes = currentFilter.isWithTransfers
-            ? viewModel.routes
-            : viewModel.routes.filter { $0.isDirect == true }
-        var allRoutes = currentFilter.isAtNight
-            ? complexRoutes.filter { $0.departureTime.starts(with: /0[0-5]/) }
-            : []
-        allRoutes += currentFilter.isMorning
-        ? complexRoutes.filter { $0.departureTime.starts(with: /0[6-9]/) || $0.departureTime.starts(with: /1[0-1]/) }
-        : []
-        allRoutes += currentFilter.isAfternoon
-            ? complexRoutes.filter { $0.departureTime.starts(with: /1[2-8]/) }
-            : []
-        allRoutes += currentFilter.isEvening
-            ? complexRoutes.filter { $0.departureTime.starts(with: /19/) || $0.departureTime.starts(with: /2[0-4]/) }
-            : []
-        return allRoutes.sorted { $0.date < $1.date }
-    }
-
+    // MARK: - Body
     var body: some View {
         VStack(spacing: .zero) {
-            (Text(viewModel.departure) + Text(AppImages.Icons.arrow).baselineOffset(-1) + Text(viewModel.arrival))
-                .font(AppFonts.Bold.medium)
-
-            if viewModel.state == .loading {
-                Spacer()
-                    .overlay {
-                        ProgressView()
-                            .progressViewStyle(CircularProgressViewStyle(tint: .ypBlackDuo))
-                    }
-            } else if viewModel.state == .none {
-                SearchResultEmptyView(notification: notification)
-            } else {
-                ScrollView(.vertical, showsIndicators: false) {
-                    ForEach(filteredRoutes) { route in
-                        if let carrier = viewModel.carriers.first(where: { $0.code == route.carrierCode }) {
-                            NavigationLink {
-                                CarrierView(carrier: carrier)
-                            } label: {
-                                RouteView(route: route, carrier: carrier)
-                            }
-                        }
-                    }
-                }
-                .padding(.top, AppSizes.Spacing.large)
-                Spacer()
-
-                NavigationLink {
-                    FilterView(filter: $currentFilter)
-                } label: {
-                    HStack(alignment: .center, spacing: AppSizes.Spacing.xSmall) {
-                        ButtonTitleView(title: buttonTitle)
-                        MarkerView(currentFilter: currentFilter)
-                    }
-                    .setCustomButton(padding: .top)
-                }
+            titleView
+            switch viewModel.state {
+                case .loading:
+                    loaderView
+                case .none:
+                    emptyView
+                default:
+                    routesList
             }
         }
         .padding(.horizontal, AppSizes.Spacing.large)
         .setCustomNavigationBar()
         .task {
-            do {
-                if viewModel.routes.isEmpty {
-                    try await viewModel.searchRoutes()
-                }
-            } catch {
-                isError = true
-            }
+            await fetchData()
         }
         .sheet(isPresented: $isError, onDismiss: {
             isError = false
@@ -92,10 +38,99 @@ struct RoutesListView: View {
     }
 }
 
+// MARK: - Private views
+private extension RoutesListView {
+    var titleView: some View {
+        VStack(alignment: .leading, spacing: .zero) {
+            (Text(viewModel.departure) + Text(AppImages.Icons.arrow).baselineOffset(-1) + Text(viewModel.arrival))
+                .font(AppFonts.Bold.medium)
+        }
+    }
+
+    var loaderView: some View {
+        Spacer()
+            .overlay {
+                ProgressView()
+                    .progressViewStyle(CircularProgressViewStyle(tint: .ypBlackDuo))
+            }
+    }
+
+    var emptyView: some View {
+        SearchResultEmptyView(notification: viewModel.notification)
+    }
+
+    var routesList: some View {
+        VStack(spacing: .zero) {
+            routesView
+            Spacer()
+            buttonView
+        }
+    }
+
+    var routesView: some View {
+        ScrollView(.vertical, showsIndicators: false) {
+            ForEach(viewModel.filteredRoutes) { route in
+                if let carrier = viewModel.carriers.first(where: { $0.code == route.carrierCode }) {
+                    NavigationLink {
+                        CarrierView(carrier: carrier, imageDownloader: viewModel.imageDownloader)
+                    } label: {
+                        RouteView(route: route, carrier: carrier, imageDownloader: viewModel.imageDownloader)
+                    }
+                }
+            }
+        }
+        .padding(.top, AppSizes.Spacing.large)
+    }
+
+    var buttonView: some View {
+        NavigationLink {
+            FilterView(viewModelFilter: $viewModel.filter)
+        } label: {
+            buttonTitleView
+        }
+    }
+
+    var buttonTitleView: some View {
+        HStack(alignment: .center, spacing: AppSizes.Spacing.xSmall) {
+            Text(viewModel.buttonTitle)
+            markerView
+        }
+        .setCustomButton(padding: .top)
+    }
+
+    var markerView: some View {
+        AppImages.Icons.marker
+            .resizable()
+            .scaledToFit()
+            .frame(width: AppSizes.Size.marker, height: AppSizes.Size.marker)
+            .foregroundStyle(
+                viewModel.filter == Filter.fullSearch ? AppColors.Universal.blue : AppColors.Universal.red
+            )
+    }
+}
+
+// MARK: - Private methods
+private extension RoutesListView {
+    func fetchData() async {
+        do {
+            if viewModel.routes.isEmpty {
+                try await viewModel.searchRoutes()
+            }
+        } catch {
+            isError = true
+        }
+    }
+}
+
 #Preview {
     NavigationStack {
         RoutesListView(
-            viewModel: TravelViewModel(networkService: NetworkService())
+            viewModel: RoutesScreenViewModel(
+                destinations: Destination.sampleData,
+                routes: Route.sampleData,
+                routesDownloader: RoutesDownloader(networkService: NetworkService()),
+                imageDownloader: ImageDownloader()
+            )
         )
     }
 }

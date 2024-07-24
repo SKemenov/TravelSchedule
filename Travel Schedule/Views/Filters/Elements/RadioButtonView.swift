@@ -8,18 +8,6 @@
 import SwiftUI
 
 struct RadioButtonView: View {
-    // MARK: - Constants
-    enum RadioButtonState {
-        case on, off
-
-        var title: String {
-            switch self {
-                case .on: return String(localized: "Да")
-                case .off: return String(localized: "Нет")
-            }
-        }
-    }
-
     // MARK: - Properties
     @Binding var isOn: Bool
 
@@ -33,7 +21,22 @@ struct RadioButtonView: View {
             Toggle(RadioButtonState.off.title, isOn: $isOn.not)
                 .setRowElement()
                 .toggleStyle(.radioButton)
-        }    }
+        }
+    }
+}
+
+// MARK: - Constants
+extension RadioButtonView {
+    enum RadioButtonState {
+        case on, off
+
+        var title: String {
+            switch self {
+                case .on: return String(localized: "Да")
+                case .off: return String(localized: "Нет")
+            }
+        }
+    }
 }
 
 #Preview {
