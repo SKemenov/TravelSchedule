@@ -1,5 +1,5 @@
 //
-//  CityView.swift
+//  CityScreen.swift
 //  Travel Schedule
 //
 //  Created by Sergey Kemenov on 19.04.2024.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct CityView: View {
+struct CityScreen: View {
     @Binding var navPath: [ViewsRouter]
     @ObservedObject var destinationsViewModel: SearchScreenViewModel
     @ObservedObject var viewModel: CityScreenViewModel
@@ -37,7 +37,7 @@ struct CityView: View {
     }
 }
 
-private extension CityView {
+private extension CityScreen {
     var emptyView: some View {
         SearchResultEmptyView(notification: viewModel.notification)
     }
@@ -64,7 +64,7 @@ private extension CityView {
 
 #Preview {
     NavigationStack {
-        CityView(
+        CityScreen(
             navPath: .constant([]),
             destinationsViewModel: SearchScreenViewModel(destinations: Destination.sampleData),
             viewModel: CityScreenViewModel(store: [])

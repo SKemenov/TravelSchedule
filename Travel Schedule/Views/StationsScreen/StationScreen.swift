@@ -1,5 +1,5 @@
 //
-//  StationView.swift
+//  StationScreen.swift
 //  Travel Schedule
 //
 //  Created by Sergey Kemenov on 19.04.2024.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct StationView: View {
+struct StationScreen: View {
     // MARK: - Properties
     @Binding var navPath: [ViewsRouter]
     @ObservedObject var destinationsViewModel: SearchScreenViewModel
@@ -38,7 +38,7 @@ struct StationView: View {
 }
 
 // MARK: - Private views
-private extension StationView {
+private extension StationScreen {
     var searchBar: some View {
         SearchBarView(searchText: $viewModel.searchString)
     }
@@ -71,7 +71,7 @@ private extension StationView {
 }
 
 // MARK: - Private methods
-private extension StationView {
+private extension StationScreen {
     func saveSelected(station: Station) {
         destinationsViewModel.saveSelected(station: station)
         returnToRoot()
@@ -89,7 +89,7 @@ private extension StationView {
 
 #Preview {
     NavigationStack {
-        StationView(
+        StationScreen(
             navPath: .constant([]),
             destinationsViewModel: SearchScreenViewModel(destinations: Destination.sampleData),
             viewModel: StationScreenViewModel(store: [], city: City.sampleData[0])

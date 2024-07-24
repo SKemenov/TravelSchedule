@@ -69,8 +69,8 @@
 		E9A49C2F2BD2A1CC00017734 /* City.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9A49C2E2BD2A1CC00017734 /* City.swift */; };
 		E9A49C312BD2A1F700017734 /* Station.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9A49C302BD2A1F700017734 /* Station.swift */; };
 		E9A49C352BD2A38900017734 /* SettingsScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9A49C342BD2A38900017734 /* SettingsScreen.swift */; };
-		E9A49C3C2BD2B5D200017734 /* CityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9A49C3B2BD2B5D200017734 /* CityView.swift */; };
-		E9A49C402BD2B83800017734 /* StationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9A49C3F2BD2B83800017734 /* StationView.swift */; };
+		E9A49C3C2BD2B5D200017734 /* CityScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9A49C3B2BD2B5D200017734 /* CityScreen.swift */; };
+		E9A49C402BD2B83800017734 /* StationScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9A49C3F2BD2B83800017734 /* StationScreen.swift */; };
 		E9A49C432BD2CC0300017734 /* RouteView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9A49C422BD2CC0300017734 /* RouteView.swift */; };
 		E9B33EA52C47971500378815 /* Array+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9B33EA42C47971500378815 /* Array+Extensions.swift */; };
 		E9DCFF382BD8E3DB00C20F64 /* FilterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9DCFF372BD8E3DB00C20F64 /* FilterView.swift */; };
@@ -160,8 +160,8 @@
 		E9A49C2E2BD2A1CC00017734 /* City.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = City.swift; sourceTree = "<group>"; };
 		E9A49C302BD2A1F700017734 /* Station.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Station.swift; sourceTree = "<group>"; };
 		E9A49C342BD2A38900017734 /* SettingsScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsScreen.swift; sourceTree = "<group>"; };
-		E9A49C3B2BD2B5D200017734 /* CityView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CityView.swift; sourceTree = "<group>"; };
-		E9A49C3F2BD2B83800017734 /* StationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StationView.swift; sourceTree = "<group>"; };
+		E9A49C3B2BD2B5D200017734 /* CityScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CityScreen.swift; sourceTree = "<group>"; };
+		E9A49C3F2BD2B83800017734 /* StationScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StationScreen.swift; sourceTree = "<group>"; };
 		E9A49C422BD2CC0300017734 /* RouteView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteView.swift; sourceTree = "<group>"; };
 		E9B33EA42C47971500378815 /* Array+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+Extensions.swift"; sourceTree = "<group>"; };
 		E9DCFF372BD8E3DB00C20F64 /* FilterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterView.swift; sourceTree = "<group>"; };
@@ -215,7 +215,7 @@
 		E9070BDB2C509ED30017E65A /* CityScreen */ = {
 			isa = PBXGroup;
 			children = (
-				E9A49C3B2BD2B5D200017734 /* CityView.swift */,
+				E9A49C3B2BD2B5D200017734 /* CityScreen.swift */,
 				E90DCD762C5042D1009B6C56 /* CityScreenViewModel.swift */,
 			);
 			path = CityScreen;
@@ -224,7 +224,7 @@
 		E9070BDC2C509EF50017E65A /* StationsScreen */ = {
 			isa = PBXGroup;
 			children = (
-				E9A49C3F2BD2B83800017734 /* StationView.swift */,
+				E9A49C3F2BD2B83800017734 /* StationScreen.swift */,
 				E90DCD802C5050F2009B6C56 /* StationScreenViewModel.swift */,
 			);
 			path = StationsScreen;
@@ -386,8 +386,8 @@
 				E9070BDB2C509ED30017E65A /* CityScreen */,
 				E9070BDC2C509EF50017E65A /* StationsScreen */,
 				E9E30FA32BD98A510061546C /* Routes */,
-				E95B335D2C1607DC0029D145 /* Filters */,
 				E95B33562C1607B60029D145 /* Carriers */,
+				E95B335D2C1607DC0029D145 /* Filters */,
 				E94ABCB72C0EE3080091B28B /* Stories */,
 				E95B33622C1608C20029D145 /* General */,
 			);
@@ -625,7 +625,7 @@
 				E9E351662C0EE98F0052F0B2 /* StoriesView.swift in Sources */,
 				E936A62F2BD78A8C00CB08F7 /* ErrorView.swift in Sources */,
 				E9E351632C0EE95F0052F0B2 /* StoriesProgressBarView.swift in Sources */,
-				E9A49C402BD2B83800017734 /* StationView.swift in Sources */,
+				E9A49C402BD2B83800017734 /* StationScreen.swift in Sources */,
 				E9A49C352BD2A38900017734 /* SettingsScreen.swift in Sources */,
 				E924B51E2C0E04D9004130CB /* AppImages.swift in Sources */,
 				E96F72252BD9BF2700EE294E /* SetCustomNavigationBar.swift in Sources */,
@@ -673,7 +673,7 @@
 				E90DCD6F2C502E0A009B6C56 /* URLSession+Extensions.swift in Sources */,
 				E99D5D882C1223CB00ED5184 /* Double+Extensions.swift in Sources */,
 				E9DCFF3B2BD8E40200C20F64 /* CarrierView.swift in Sources */,
-				E9A49C3C2BD2B5D200017734 /* CityView.swift in Sources */,
+				E9A49C3C2BD2B5D200017734 /* CityScreen.swift in Sources */,
 				E98962E12BA0EE54005A84BA /* CopyrightService.swift in Sources */,
 				E936A62A2BD62FA300CB08F7 /* StoryPage.swift in Sources */,
 				E9EC1BFA2C0CB9F200FC85ED /* AppFonts.swift in Sources */,

@@ -70,7 +70,7 @@ private extension RootTabView {
     }
 
     var citiesScreen: some View {
-        CityView(
+        CityScreen(
             navPath: $rootViewModel.navPath,
             destinationsViewModel: destinationsViewModel,
             viewModel: CityScreenViewModel(store: rootViewModel.store)
@@ -79,7 +79,7 @@ private extension RootTabView {
     }
 
     var stationsScreen: some View {
-        StationView(
+        StationScreen(
             navPath: $rootViewModel.navPath,
             destinationsViewModel: destinationsViewModel,
             viewModel: StationScreenViewModel(
